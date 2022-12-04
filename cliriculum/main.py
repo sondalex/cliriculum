@@ -161,16 +161,23 @@ def cli() -> argparse.ArgumentParser:
         help="Directory where the HTML resume should be created",
         default="resume",
     )
+
+    parser.add_argument(
+        "--overwrite",
+        type=int,
+        action="store",
+        required=False,
+        help="Overwrite existing directory if set to other value than 0.",
+        default=0
+    )
     return parser
 
 
 def main():
     parser = cli()
     args = parser.parse_args()
-
-    args.destination
-
-
+    overwrite = bool(args.overwrite)
+    make_resume(directory=args.destination, sidebar_md=args.descr_md, contact=args.contact_json, dates=args.dates_json, main_md=args.main_md, overwrite=overwrite)
 
 if __name__ == "__main__":
     sys.exit(main())

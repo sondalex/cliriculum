@@ -58,19 +58,21 @@ intended to create PDF compatible HTML books.
 ## Cli
 
 ```
-cliriculum --main="main.md" --sidebar="sidebar.md" --contact="contact.json" --side="left"
+cliriculum --main="main.md" --description="sidebar.md" --contact="contact.json" --dates="dates.json"
 ```
 
 ## Rendering
 
-* Export to html
-* Export to pdf (via html)
+* Export to HTML
+* Export to PDF (via browser)
 
 ## Styling
 
 You can modify style by modifying the generated `style.css` file.
 
+## Example
 
+An example is accessible at [](example/index.html)
 
 ## Language support
 

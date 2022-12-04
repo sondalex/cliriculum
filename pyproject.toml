@@ -5,7 +5,10 @@ requires = ["setuptools"]
 name = "cliriculum"
 description = "A python cli tool to rapidly create an html or PDF resume"
 readme = "README.md"
-version = "0.1.0"
+version = "0.1.1"
+
+[project.scripts]
+cliriculum = "cliriculum.main:main"
 
 [tool.setuptools]
 packages = ["cliriculum"]
