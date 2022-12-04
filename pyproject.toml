@@ -1,0 +1,23 @@
+[build-system]
+requires = ["setuptools"]
+
+[project]
+name = "cliriculum"
+description = "A python cli tool to rapidly create an html or PDF resume"
+readme = "README.md"
+version = "0.1.0"
+
+[tool.setuptools]
+packages = ["cliriculum"]
+
+[tool.setuptools.package-data]
+cliriculum = ["data/*", "data/*/*", "data/*/*/*"]
+
+
+[tool.pytest.ini_options]
+testpaths = [
+    "tests",
+]
+norecursedirs = [
+    "deps"
+] # https://docs.pytest.org/en/7.1.x/example/pythoncollection.html
