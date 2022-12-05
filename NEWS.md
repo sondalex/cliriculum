@@ -6,3 +6,8 @@
 # V0.1.2
 
 * Corrected error in make_resume function
+
+# V0.1.2.1
+
+* Changed style.css font size
+* Fixed main box dimension in style.css

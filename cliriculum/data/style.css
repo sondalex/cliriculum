@@ -1,7 +1,7 @@
 :root{
   --page-width: 8.5in;
   --margin-right: 0.5in;
-  --margin-left: 0.25in;
+  --margin-left: 0.5in;
   --content-width: calc(var(--page-width) - var(--margin-right) - var(--margin-left));
   --root-font-size: 12pt;
   --sidebar-width: calc(var(--pagedjs-margin-left) + var(--margin-top-left));
@@ -25,7 +25,7 @@
 @page{
   /* variables are not supported in page https://pagedjs.org/documentation/5-web-design-for-print/#%40page-rule */
   size: letter portrait;
-  margin: 1in 0.25 1in 0.5in;
+  margin: 1in 0.5in 1in 0.5in;
 }
 
 .pagedjs_page {
@@ -40,7 +40,7 @@ html {
 
 body{
   width: var(--content-width);
-  font-family: "Roboto", sans-serif;
+  font-family: "Roboto";
   font-weight: 300;
   color: black;
   hyphens: auto;
@@ -58,11 +58,14 @@ img{
 
 #main{
   /* padding: 0 0.25in 0 0.25in; */
-  position:absolute;
+  float:right;
   top: auto;
-  left: var(--aside-width);
-  font-size: 1rem;
-  /* float: right; */
+  /*left: var(--aside-width);*/
+  font-size: 0.8rem;
+  padding-right: var(--pagedjs-margin-right);
+  width: calc(var(--pagedjs-pagebox-width) - var(--aside-width));
+  padding-left: 0.25in;
+  /*width:calc(var(--pagedjs-pagebox-width) - var(--margin-top-left) - var(--pagedjs-margin-right));*/
 }
 
 #main .content{
@@ -85,22 +88,11 @@ aside{
   padding-left:var(--pagedjs-margin-left)
 }
 
-
-
-.aside .content {
-  /* padding-left:0.2in; */
-  
-  /* display:block; */
-  /* padding-bottom: 0.2in; */
-}
-
 .aside .contact {
-  /* height: calc(var(--margin-left-top-height) + var(--pagedjs-margin-top)); */
   padding-bottom: 2em;
 }
 
 .aside .contact .content  {
-  /* padding-top:0.2in; */
   color:whitesmoke;
   padding-left: var(--pagedjs-margin-left);
   padding-top: var(--pagedjs-margin-top);
@@ -117,16 +109,10 @@ aside{
   left:0;
   top:0;
   background-color: var(--sidebar-background-color);
-  font-size:1rem;
-  /* float: left; */
 }
 
-.aside strong {
-  font-size:x-large;
-}
-
-main strong {
-  font-weight: 500;
+.aside .contact strong {
+  font-size:large;
 }
 
 h1{
@@ -177,6 +163,7 @@ aside .contact{
 .contact a {
   text-decoration: none;
   font-weight:400;
+  font-size: small;
 }
 
 .contact .box{
@@ -189,7 +176,6 @@ aside .contact{
 }
 
 .contact i {
-  font-size:1.2rem;
   font-weight:370;
 }
 
