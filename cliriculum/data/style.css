@@ -62,7 +62,6 @@ img{
   top: auto;
   /*left: var(--aside-width);*/
   font-size: 0.8rem;
-  padding-right: var(--pagedjs-margin-right);
   width: calc(var(--pagedjs-pagebox-width) - var(--aside-width));
   padding-left: 0.25in;
   /*width:calc(var(--pagedjs-pagebox-width) - var(--margin-top-left) - var(--pagedjs-margin-right));*/
