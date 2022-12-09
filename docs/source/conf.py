@@ -9,7 +9,7 @@
 project = 'cliriculum'
 copyright = '2022, Alexandre Sonderegger'
 author = 'Alexandre Sonderegger'
-release = 'v0.1.0'
+release = 'v0.1.2.2'
 
 # -- General configuration ---------------------------------------------------
 # https://www.sphinx-doc.org/en/master/usage/configuration.html#general-configuration

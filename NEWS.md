@@ -11,3 +11,7 @@
 
 * Changed style.css font size
 * Fixed main box dimension in style.css
+
+# V0.1.2.2
+
+* Fixed date icon padding in  style.css
