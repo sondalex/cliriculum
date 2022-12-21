@@ -26,6 +26,7 @@
   /* variables are not supported in page https://pagedjs.org/documentation/5-web-design-for-print/#%40page-rule */
   size: letter portrait;
   margin: 1in 0.5in 1in 0.5in;
+  background: linear-gradient(to right, var(--sidebar-background-color), var(--sidebar-background-color) var(--aside-width), white var(--aside-width));
 }
 
 .pagedjs_page {
@@ -59,12 +60,11 @@ img{
 #main{
   /* padding: 0 0.25in 0 0.25in; */
   float:right;
-  top: auto;
+  right:0;
   /*left: var(--aside-width);*/
   font-size: 0.8rem;
   width: calc(var(--pagedjs-pagebox-width) - var(--aside-width));
   padding-left: 0.25in;
-  /*width:calc(var(--pagedjs-pagebox-width) - var(--margin-top-left) - var(--pagedjs-margin-right));*/
 }
 
 #main .content{
@@ -78,10 +78,17 @@ img{
 }
 
 aside{
-  height: var(--pagedjs-height);
+  /* height: var(--pagedjs-height); */
+  height: 100%;
   display:flex;
   flex-direction: column;
+  position:absolute;
+  float:left;
+  left:calc(var(--pagedjs-margin-left) * -1);
+  top:calc(var(--pagedjs-margin-top) * -1);
+  width: var(--aside-width);
 }
+
 
 .aside-body-area{
   padding-left:var(--pagedjs-margin-left)
@@ -102,13 +109,6 @@ aside{
   padding-top: 0.2in;
 }
 
-.aside {
-  width: var(--aside-width);
-  position:absolute;
-  left:0;
-  top:0;
-  background-color: var(--sidebar-background-color);
-}
 
 .aside .contact strong {
   font-size:large;
@@ -123,13 +123,17 @@ h2{
   font-weight:400;
 }
 
-.pagedjs_pagebox {
+/* .pagedjs_pagebox {
   position:relative;
-}
+} */
 
-.pagedjs_pagebox > .pagedjs_area > .pagedjs_page_content {
+/* The following commented block solves one issue but as a result, automatic break page considers absolute positionned block and yields a bug */
+
+/* .pagedjs_pagebox > .pagedjs_area > .pagedjs_page_content {
   position: static;
-}
+} */
+
+
 
 .pagedjs_pages .pagedjs_pagebox .pagedjs_margin:not(.hasContent){
   visibility: visible;
@@ -150,14 +154,10 @@ h2{
   background-color: none;
 }
 
-aside .contact{
+.aside .contact{
   background-color: var(--contact-background-color);
 }
 
-.aside .description{
-  height:100%;
-  width:100%;
-}
 
 .contact a {
   text-decoration: none;

@@ -15,3 +15,7 @@
 # V0.1.2.2
 
 * Fixed date icon padding in  style.css
+
+# V0.1.3
+
+* Fixed sidebar which would push main content on sidebar overflow.

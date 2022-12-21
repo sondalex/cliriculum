@@ -19,6 +19,8 @@ Both are bundled in package.
   1) `contact`: gets generated from JSON file: `--contact=<your JSON file for contact details>`
   2) `description`: gets generated from markdown file `--description=<your description.md>`
 
+  Sidebar supports one page only. The colour is continued to next pages. 
+
 Additional metadata:
 
 * dates.json: A JSON file with keys matching titles ids defining a start and end information. During rendering the dates are added to the top of the paragraph of the level two headings with matching id.
