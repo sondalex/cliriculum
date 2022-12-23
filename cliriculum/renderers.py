@@ -1,13 +1,13 @@
 from mistletoe.html_renderer import HTMLRenderer
-from .markdown import LogoEntry, TextEntry, URLEntry, ContactBlock, SocialBlock, DescriptionBlock
+from cliriculum.markdown import LogoEntry, TextEntry, URLEntry, ContactBlock, SocialBlock, DescriptionBlock, ImageEntry
 from textwrap import dedent
-
+import os
 # best not to break the line.
 
 
 class Renderer(HTMLRenderer):
     def __init__(self):
-        super().__init__(DescriptionBlock, ContactBlock, SocialBlock, LogoEntry, TextEntry, URLEntry)
+        super().__init__(DescriptionBlock, ContactBlock, SocialBlock, LogoEntry, TextEntry, URLEntry, ImageEntry)
 
     @staticmethod
     def _image_html(token):
@@ -19,9 +19,13 @@ class Renderer(HTMLRenderer):
             height = ""
         else:
             height = 'height="{}"'.format(token.height)
-
-        html = '<img src="{src}" {width} {height}"/>'
-        return html.format(src=token.src, width=width, height=height)
+        identifier = ""
+        if hasattr(token, "id"):
+            if token.id is not None:
+                identifier = 'id="{}"'.format(token.id)
+        
+        html = '<img src="{src}" {width} {height} {identifier}/>'
+        return html.format(src=token.src, width=width, height=height, identifier=identifier)
 
     @staticmethod
     def _i_image_html(token):
@@ -62,6 +66,12 @@ class Renderer(HTMLRenderer):
                 )
         return dedent(html)
 
+    def render_image_entry(self, token):
+        if token.src is not None:
+            return self._image_html(token)
+        else:
+            return ""
+            
     def render_text_entry(self, token):
         pre = "<p>"
         post = "</p>"
@@ -126,7 +136,7 @@ class Renderer(HTMLRenderer):
 
     def render_contact_block(self, token):
         template = """
-        <div class="contact">
+        <div class="contact" id="contact">
         <div class="content">
         {inner}
         </div>

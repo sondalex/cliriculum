@@ -2,8 +2,9 @@ import re
 from mistletoe import Document
 from mistletoe.block_token import Heading
 from mistletoe.span_token import RawText
-from .deserializers import Dates, Contact
+from cliriculum.deserializers import Dates, Contact
 from typing import List, Union
+import os
 
 
 class URLEntry:
@@ -46,8 +47,16 @@ class LogoEntry:
         self.classes = classes
 
 
+class ImageEntry:
+    def __init__(self, src, width, height, id):
+        self.id = id
+        self.src = src
+        self.width = width
+        self.height = height
+
+
 class TextEntry:
-    def __init__(self, text, emphasis:Union[str, None] = None):
+    def __init__(self, text, emphasis: Union[str, None] = None):
         """_summary_
 
         Parameters
@@ -206,9 +215,10 @@ class ParseMd:
         -------
 
         >>> from cliriculum.renderers import Renderer
-        >>> from cliriculum.markdown import Dates
+        >>> from cliriculum.deserializers import Dates
+        >>> from cliriculum.loaders import load_json
         >>> parsed = ParseMd("README.md")
-        >>> dates = Dates(path="dates.json")
+        >>> dates = Dates(**load_json("dates.json"))
         >>> doc = parsed.add_dates(dates=dates).doc
         >>> with Renderer() as r:
         >>>     html = r.render(doc)
@@ -258,9 +268,10 @@ class ParseMd:
         --------
 
         >>> from cliriculum.renderers import Renderer
-        >>> from cliriculum.markdown import Contact
+        >>> from cliriculum.deserializers import Contact
+        >>> from cliriculum.loaders import load_json
         >>> parsed = ParseMd("README.md")
-        >>> dates = Contact(path="contact.json")
+        >>> dates = Contact(**load_json("contact.json"))
         >>> doc = parsed.add_contact(contact=contact).doc
         >>> with Renderer() as r:
         >>>     html = r.render(doc)
@@ -302,7 +313,8 @@ class ParseMd:
             classes=contact.number.classes,
             text=contact.email.text
         )
-        children = [name, profession, email, website, socials, number]
+        profile = ImageEntry(src=os.path.basename(contact.profile.logo), height=contact.profile.height, width=contact.profile.width, id="profile_pic")
+        children = [profile, name, profession, email, website, socials, number]
 
         contact_block = ContactBlock(children=children)
 

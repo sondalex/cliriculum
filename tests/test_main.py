@@ -1,4 +1,7 @@
-from cliriculum.main import copy_resources, make_resume
+from cliriculum.utils import copy_resources, copy_files
+from cliriculum.main import make_resume
+from cliriculum.deserializers import Contact
+from cliriculum.loaders import load_json
 from pathlib import Path
 import os
 import pytest
@@ -31,6 +34,15 @@ def test_copy_resources(tmp_path):
     assert t1 == set()
     assert t2 == set()
     assert t3 == set()
+
+
+def test_copy_files(tmp_path, fixtures_path):
+    c = str(fixtures_path / "contact.json")
+    contact = Contact(**load_json(c))
+    copy_files(srcs=[contact.profile.logo], dst=tmp_path)
+    img = "image.png"
+    t1 = set(os.listdir(tmp_path)).symmetric_difference([img])
+    assert t1 == set()
 
 
 def test_make_resume(tmp_path, fixtures_path):

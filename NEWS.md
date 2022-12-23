@@ -19,3 +19,7 @@
 # V0.1.3
 
 * Fixed sidebar which would push main content on sidebar overflow.
+
+# V0.1.4
+
+* Added profile picture support

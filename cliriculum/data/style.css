@@ -16,6 +16,11 @@
   --aside-width: var(--sidebar-width)
 }
 
+#profile_pic {
+  border-radius: 50%;
+  object-position: center;
+  top: -1in;
+}
 
 
 *{
@@ -96,13 +101,15 @@ aside{
 
 .aside .contact {
   padding-bottom: 2em;
-}
-
-.aside .contact .content  {
   color:whitesmoke;
   padding-left: var(--pagedjs-margin-left);
+}
+
+#contact {
   padding-top: var(--pagedjs-margin-top);
 }
+
+
 
 .aside .description .content {
   padding-left: var(--pagedjs-margin-left);

@@ -3,5 +3,6 @@
     "email": {"logo":null, "url":null, "text":null, "classes": null},
     "website": {"url":"www.github.com/sondalex/cliriculum", "text":"github.com/sondalex/cliriculum", "logo":null, "classes":"fa-brands fa-github"},
     "number": {"logo":null, "url":null, "text":null, "classes":null},
-    "socials": [{"url":null, "logo":null, "text":null, "classes": null}]
+    "socials": [{"url":null, "logo":null, "text":null, "classes": null}],
+    "profile": {"picture":"tests/fixtures/image.png", "width":"200px", "height":"200px"}
 }

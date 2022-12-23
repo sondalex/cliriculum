@@ -180,6 +180,16 @@ class Socials:
         ]
 
 
+class Profile(URL):
+    """
+    Profile fields.
+    """
+    def __init__(self, picture: Union[str, None], width: Union[str, None] = "200px", height: Union[str, None] = "200px"):
+        # just treat picture as logo
+        logo = picture
+        super().__init__(url=None, width=width, height=height, logo=logo)
+
+
 class Contact:
     """
     Contact deserializer.
@@ -192,8 +202,9 @@ class Contact:
     website: Website
     socials: Socials
     number: Number
+    node: A pathlib node. To use with path arithmetic
     """
-    def __init__(self, name, profession, email, website, socials, number):
+    def __init__(self, name, profession, email, website, socials, number, profile):
         """
 
         Examples
@@ -211,3 +222,4 @@ class Contact:
         self.socials = Socials(socials)
         
         self.number = Number(**number)
+        self.profile = Profile(**profile)
