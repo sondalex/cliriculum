@@ -172,6 +172,10 @@ h2{
   font-size: small;
 }
 
+.contact a {
+  color: whitesmoke;
+}
+
 .contact .box{
   margin-top:0.3rem;
   margin-bottom:0.3rem;

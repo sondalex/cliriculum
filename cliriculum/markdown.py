@@ -279,8 +279,12 @@ class ParseMd:
         self.top = top
         name = TextEntry(contact.name, emphasis="bold")
         profession = TextEntry(contact.profession, emphasis="italic")
+        email_url = contact.email.url
+        if email_url is not None:
+            email_url = "mailto: {}".format(contact.email.url)
+        
         email = URLEntry(
-            src=contact.email.logo, width=contact.email.width, height=contact.email.height, url=contact.email.url,
+            src=contact.email.logo, width=contact.email.width, height=contact.email.height, url=email_url,
             classes=contact.email.classes,
             text=contact.email.text
         )
@@ -311,7 +315,7 @@ class ParseMd:
             height=contact.number.height,
             url=tel_url,
             classes=contact.number.classes,
-            text=contact.email.text
+            text=contact.number.text
         )
         profile = ImageEntry(src=os.path.basename(contact.profile.logo), height=contact.profile.height, width=contact.profile.width, id="profile_pic")
         children = [profile, name, profession, email, website, socials, number]
