@@ -1,89 +1,9 @@
 import argparse
 import os
 from pathlib import Path
-from .resume import resume
-from importlib import resources
-
+from cliriculum.resume import resume
+from cliriculum.utils import copy_resources
 # from importlib.resources.abc import Traversable
-from pathlib import PosixPath
-from typing import List
-from shutil import copy2
-
-
-def get_resources_nodes(root, tree, resrcs: List) -> List[PosixPath]:
-    """_summary_
-    Get resources nodes recursively.
-    Parameters
-    ----------
-    root: root Traversable
-        Directory containing the module
-        Generally obtained with:
-        `root=resources.files(package_name).parent`
-        package_name, being the package installed on your system
-    tree : Traversable
-        _description_
-    resrcs:
-        Resources should be empty list for first call.
-        Expands on each recursive call.
-
-    Returns
-    -------
-    List[PosixPath]
-        List of nodes which are resources
-
-    Examples
-    --------
-    >>> a = resources.files("cliriculum.data")
-    >>> get_resources_nodes(a.parent.parent, a)
-    """
-    package = ".".join(tree.relative_to(root).parts)  # init
-    for node in tree.iterdir():
-        # print(node)
-        # print(package)
-        # le node reste le node. Il faut l'updater
-        if node.is_dir():
-            # if (node / "__init__.py").exists():
-            get_resources_nodes(root=root, tree=node, resrcs=resrcs)
-        else:
-            # node is file
-            # print(node.name)
-            # print(package)
-            if (
-                resources.is_resource(package, node.name)
-                and node.parts[-1] != "__init__.py"
-            ):
-                resrcs.append(node)
-    return resrcs
-
-
-def copy_resources(directory: str, resource_root: str = "cliriculum.data"):
-    """
-    Copy resources to specified directory
-
-    Parameters
-    ----------
-    directory: str Where to store the directory
-    resource_root: str The resource_root directory specified in module type
-    notation, default "cliriculum.data"
-    """
-    pkgname = resource_root.split(".")[0]
-
-    tree = resources.files(package=resource_root)  # requires python >=3.9
-    root = resources.files(package=pkgname).parent
-    rsrcs = get_resources_nodes(root=root, tree=tree, resrcs=[])
-
-    for source in rsrcs:
-        relative_to = source.relative_to(tree)
-        target_dir = Path(directory)
-        target = target_dir / str(relative_to)
-        
-        # if source.relative_to is not root
-        # and directory does not exist
-        # create directory
-        if target.parent.exists() is False and target.parent != target_dir:
-            os.makedirs(target.parent)
-        
-        copy2(src=source, dst=target)
 
 
 def make_resume(
@@ -107,9 +27,9 @@ def make_resume(
     else:
         raise ValueError("The specified file is not a directory and exists")
     html = resume(
-        sidebar_md=sidebar_md, main_md=main_md, contact=contact, dates=dates
+        sidebar_md=sidebar_md, main_md=main_md, contact=contact, dates=dates, rsrc_dst=directory
     )
-
+    
     with open(Path(directory) / "index.html", "w") as f:
         f.write(html)
 

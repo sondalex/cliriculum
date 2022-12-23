@@ -3,6 +3,12 @@
 Create your CSV with a simple python CLI tool.
 Pure python implementation no system dependencies required.
 
+## Installation
+
+```console
+pip install git+https://github.com/sondalex/cliriculum.git
+```
+
 ## Web Dependencies
 
 * [fontawesome](https://fontawesome.com/)
@@ -51,7 +57,8 @@ Currently, I chose not to use this method.
 
 ## Converting to PDF
 
-Open with the generated HTML with your web browser.
+Open with the generated HTML with your web browser 
+(Chromium based browsers recommended).
 Run `ctrl+p` or `cmd+p` and print to PDF.
 The HTML representation of the document relies
 on [paged.js](https://pagedjs.org/) a great library
@@ -72,6 +79,10 @@ cliriculum --main="main.md" --description="sidebar.md" --contact="contact.json" 
 
 You can modify style by modifying the generated `style.css` file.
 
+## Resources
+
+
+
 ## Example
 
 An example is accessible at [](example/index.html)
@@ -84,7 +95,7 @@ English only.
 
 For the moment there is almost no test coverage use with care.
 No XSS injection prevention.
-Make sure to adopt security practice if you wish to build a web service from
+Make sure to adopt good security practices if you wish to build a web service from
 this package.
 
 
@@ -92,3 +103,4 @@ this package.
 
 * Escape html and url in html renderer.
 * A fontawesome updater using their GraphQl API.
+* Fix slight blur of sidebar
