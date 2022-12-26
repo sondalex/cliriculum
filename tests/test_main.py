@@ -52,8 +52,8 @@ def test_make_resume(tmp_path, fixtures_path):
     c = str(fixtures_path / "contact.json")
     
     with pytest.raises(FileExistsError):
-        make_resume(tmp_path, sidebar_md=s, main_md=m, dates=d, contact=c, overwrite = False)
+        make_resume(tmp_path, sidebar_md=s, main_md=m, dates=d, contact=c, overwrite = False, stylesheet=None)
     
-    make_resume(tmp_path, sidebar_md=s, main_md=m, dates=d, contact=c, overwrite = True)
+    make_resume(tmp_path, sidebar_md=s, main_md=m, dates=d, contact=c, overwrite = True, stylesheet=None)
     assert "index.html" in os.listdir(str(tmp_path))
 

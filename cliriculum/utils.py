@@ -81,7 +81,21 @@ def copy_resources(directory: str, resource_root: str = "cliriculum.data"):
         copy2(src=source, dst=target)
 
 
-def copy_files(srcs: Iterable[Union[str, Path]], dst: Union[Path, str]):
+def copy_files(srcs: Iterable[Union[str, Path]], dst: Union[Path, str]) -> None:
+    """
+    Copy files to destination keeping path basename.
+
+    Parameters
+    ----------
+    srcs : Iterable[Union[str, Path]]
+        _description_
+    dst : Union[Path, str]
+        _description_
+    """
+    # effectivement peut etre très dangereux.
+    # Doit etre corriger.
+    if isinstance(srcs, str):
+        raise TypeError("srcs should be an Iterable but not a string")
     for src in srcs:
         file_dst = Path(dst) / os.path.basename(src)
         copy2(src, file_dst)

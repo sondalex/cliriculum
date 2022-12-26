@@ -77,7 +77,14 @@ cliriculum --main="main.md" --description="sidebar.md" --contact="contact.json" 
 
 ## Styling
 
-You can modify style by modifying the generated `style.css` file.
+You can modify style by modifying the generated `style.css` file. However, each time
+you rebuild the resume, the modified style.css gets back to default.
+To encounter this behaviour you can specify a secondary stylesheet.
+
+```console
+cliriculum --main="main.md" --description="sidebar.md" --contact="contact.json" --dates="dates.json" --stylesheet="custom.css"
+```
+
 
 ## Resources
 

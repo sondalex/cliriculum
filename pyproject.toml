@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "cliriculum"
 description = "A python cli tool to rapidly create an html or PDF resume"
 readme = "README.md"
-version = "0.1.4"
+version = "0.1.4.1"
 
 [project.scripts]
 cliriculum = "cliriculum.main:main"

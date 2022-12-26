@@ -3,11 +3,12 @@ import os
 from pathlib import Path
 from cliriculum.resume import resume
 from cliriculum.utils import copy_resources
+from typing import Union
 # from importlib.resources.abc import Traversable
 
 
 def make_resume(
-    directory, sidebar_md: str, main_md: str, dates: str, contact: str, overwrite: bool
+    directory, sidebar_md: str, main_md: str, dates: str, contact: str, overwrite: bool, stylesheet:Union[str, None]
 ):
     """
     Generates resume
@@ -90,6 +91,15 @@ def cli() -> argparse.ArgumentParser:
         help="Overwrite existing directory if set to other value than 0.",
         default=0
     )
+    parser.add_argument(
+        "--stylesheet",
+        dest="stylesheet",
+        type=str,
+        action="store",
+        required=False,
+        help="A supplementary stylesheet to add to the dom.",
+        default=None,
+    )
     return parser
 
 
@@ -97,7 +107,7 @@ def main():
     parser = cli()
     args = parser.parse_args()
     overwrite = bool(args.overwrite)
-    make_resume(directory=args.destination, sidebar_md=args.descr_md, contact=args.contact_json, dates=args.dates_json, main_md=args.main_md, overwrite=overwrite)
+    make_resume(directory=args.destination, sidebar_md=args.descr_md, contact=args.contact_json, dates=args.dates_json, main_md=args.main_md, overwrite=overwrite, stylesheet=args.stylesheet)
 
 if __name__ == "__main__":
     sys.exit(main())
