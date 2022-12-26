@@ -96,8 +96,8 @@ class ResumeHTML:
             copy_files(srcs=[stylesheet], dst=rsrc_dst)
             _ = f'<link rel="stylesheet" href="{basename(stylesheet)}" type="text/css">'
         else:
-            _ = None
-        self.additionalcss = ""
+            _ = ""
+        self.additionalcss = _
     
     def join(self) -> str:    
         body = self.sidebar.html + "\n" + self.main.html  # union of sidebar and main
