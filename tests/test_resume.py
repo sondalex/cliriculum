@@ -1,4 +1,4 @@
-from cliriculum.resume import resume, SideBarHTML, MainHTML
+from cliriculum.resume import resume, SideBarHTML, MainHTML, ResumeHTML
 import pytest
 import os
 
@@ -26,3 +26,13 @@ def test_resume(tmp_path, fixtures_path):
     resume(sidebar_md=s, main_md=m, dates=d, contact=c, rsrc_dst=tmp_path, stylesheet=add_css)
     files = os.listdir(tmp_path)
     assert set(files).symmetric_difference(["custom.css", "image.png"]) == set()
+
+def test_resume_html(tmp_path, fixtures_path):
+    s = str(fixtures_path / "sidebar.md")
+    m = str(fixtures_path / "main.md")
+    d = str(fixtures_path / "dates.json")
+    c = str(fixtures_path / "contact.json")
+    sidebar = SideBarHTML(path=s, contact=c, rsrc_dst=tmp_path)
+    main = MainHTML(path=m, dates=d)
+    resume = ResumeHTML(main=main, sidebar=sidebar, stylesheet=fixtures_path / "custom.css", rsrc_dst=tmp_path)
+    assert resume.additionalcss != ""

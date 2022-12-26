@@ -28,7 +28,7 @@ def make_resume(
     else:
         raise ValueError("The specified file is not a directory and exists")
     html = resume(
-        sidebar_md=sidebar_md, main_md=main_md, contact=contact, dates=dates, rsrc_dst=directory
+        sidebar_md=sidebar_md, main_md=main_md, contact=contact, dates=dates, rsrc_dst=directory, stylesheet=stylesheet
     )
     
     with open(Path(directory) / "index.html", "w") as f:
