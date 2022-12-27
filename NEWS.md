@@ -1,3 +1,7 @@
+# V0.1.4.2
+
+* Added support for HTML blocks.
+
 # V0.1.4.1
 
 * Added custom stylesheet support
