@@ -1,10 +1,11 @@
 import re
-from mistletoe import Document
 from mistletoe.block_token import Heading
 from mistletoe.span_token import RawText
 from cliriculum.deserializers import Dates, Contact
 from typing import List, Union
 import os
+from cliriculum.parsers import Document
+
 
 
 class URLEntry:
@@ -216,6 +217,7 @@ class ParseMd:
 
         >>> from cliriculum.renderers import Renderer
         >>> from cliriculum.deserializers import Dates
+        >>> from cliriculum.markdown import ParseMd
         >>> from cliriculum.loaders import load_json
         >>> parsed = ParseMd("README.md")
         >>> dates = Dates(**load_json("dates.json"))

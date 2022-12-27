@@ -9,6 +9,12 @@
 * CSS
 * HTML
 
+A bit of html
+
+<h2>
+H2
+</h2>
+
 And much more bullet points
 
 * ...
