@@ -151,7 +151,6 @@ class ParseMd:
             self.doc = Document(f)
         self.periods = []
         self.top = None
-        self.h_level_w_id = []
         self.heading_index = OrderedDict()  # maybe should set it to private
 
     def _isHeading(self, leaf):
@@ -437,7 +436,6 @@ class ParseMd:
             
             # increment all keys by 1
             self.heading_index = {key + 1: value for key, value in self.heading_index.items()}
-            self.h_level_w_id = [pos + 1 for pos in self.h_level_w_id]
 
         return self
 
