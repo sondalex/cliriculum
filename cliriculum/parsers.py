@@ -1,9 +1,32 @@
-from mistletoe.block_token import BlockCode, Heading, Quote, CodeFence, ThematicBreak, List, Table, Footnote, HTMLBlock, Paragraph, span_token
+from mistletoe.block_token import (
+    BlockCode,
+    Heading,
+    Quote,
+    CodeFence,
+    ThematicBreak,
+    List,
+    Table,
+    Footnote,
+    HTMLBlock,
+    Paragraph,
+    span_token,
+)
 from mistletoe.block_tokenizer import tokenize
 
 
 # override mistletoe.block_token.Document defaults.
-__all__ = ['BlockCode', 'Heading', 'Quote', 'CodeFence', 'ThematicBreak', 'List', 'Table', 'Footnote', "HTMLBlock", 'Paragraph']
+__all__ = [
+    "BlockCode",
+    "Heading",
+    "Quote",
+    "CodeFence",
+    "ThematicBreak",
+    "List",
+    "Table",
+    "Footnote",
+    "HTMLBlock",
+    "Paragraph",
+]
 _token_types = [globals()[cls_name] for cls_name in __all__]
 
 
@@ -35,13 +58,14 @@ class Document:
     LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
     OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
     SOFTWARE.
-    """    
+    """
+
     token_types = _token_types
-    
+
     def __init__(self, lines):
         if isinstance(lines, str):
             lines = lines.splitlines(keepends=True)
-        lines = [line if line.endswith('\n') else '{}\n'.format(line) for line in lines]
+        lines = [line if line.endswith("\n") else "{}\n".format(line) for line in lines]
         self.footnotes = {}
         global _root_node
         _root_node = self
