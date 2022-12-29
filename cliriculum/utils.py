@@ -71,13 +71,13 @@ def copy_resources(directory: str, resource_root: str = "cliriculum.data"):
         relative_to = source.relative_to(tree)
         target_dir = Path(directory)
         target = target_dir / str(relative_to)
-        
+
         # if source.relative_to is not root
         # and directory does not exist
         # create directory
         if target.parent.exists() is False and target.parent != target_dir:
             os.makedirs(target.parent)
-        
+
         copy2(src=source, dst=target)
 
 
@@ -99,4 +99,3 @@ def copy_files(srcs: Iterable[Union[str, Path]], dst: Union[Path, str]) -> None:
     for src in srcs:
         file_dst = Path(dst) / os.path.basename(src)
         copy2(src, file_dst)
-

@@ -1,13 +1,30 @@
 from mistletoe.html_renderer import HTMLRenderer
-from cliriculum.markdown import LogoEntry, TextEntry, URLEntry, ContactBlock, SocialBlock, DescriptionBlock, ImageEntry
+from cliriculum.markdown import (
+    LogoEntry,
+    TextEntry,
+    URLEntry,
+    ContactBlock,
+    SocialBlock,
+    DescriptionBlock,
+    ImageEntry,
+    LocationEntry,
+    PeriodEntry,
+)
 from textwrap import dedent
-import os
-# best not to break the line.
 
 
 class Renderer(HTMLRenderer):
     def __init__(self):
-        super().__init__(DescriptionBlock, ContactBlock, SocialBlock, LogoEntry, TextEntry, URLEntry, ImageEntry)
+        super().__init__(
+            DescriptionBlock,
+            ContactBlock,
+            SocialBlock,
+            TextEntry,
+            URLEntry,
+            ImageEntry,
+            LocationEntry,
+            PeriodEntry,
+        )
 
     @staticmethod
     def _image_html(token):
@@ -23,55 +40,54 @@ class Renderer(HTMLRenderer):
         if hasattr(token, "id"):
             if token.id is not None:
                 identifier = 'id="{}"'.format(token.id)
-        
+
         html = '<img src="{src}" {width} {height} {identifier}/>'
-        return html.format(src=token.src, width=width, height=height, identifier=identifier)
+        return html.format(
+            src=token.src, width=width, height=height, identifier=identifier
+        )
 
     @staticmethod
     def _i_image_html(token):
         template = '<i class="{classes}"></i>'
-        return template.format(classes=token.classes)        
+        return template.format(classes=token.classes)
 
     def render_logo_entry(self, token):
+        print(token)
         text = token.title
         parent_o = '<div class="box">'
         parent_c = "</div>"
 
         if token.classes is not None:
             html = "\n".join(
-                [
-                    parent_o,
-                    self._i_image_html(token),
-                    f"<span>{text}</span>",
-                    parent_c
-                ]
+                [parent_o, self._i_image_html(token), f"<span>{text}</span>", parent_c]
             )
             # print(html)
         else:
             if token.src is None:
+                html = "\n".join([parent_o, f"<span>{text}</span>", parent_c])
+            else:
                 html = "\n".join(
                     [
                         parent_o,
-                        f"<span>{text}</span>",
-                        parent_c
-                    ]
-                )
-            else:
-                html = "\n".join(
-                    [parent_o,
                         self._image_html(token),
                         f"<span>{text}</span>",
-                        parent_c
+                        parent_c,
                     ]
                 )
         return dedent(html)
+
+    def render_period_entry(self, token):
+        return self.render_logo_entry(token)
+
+    def render_location_entry(self, token):
+        return self.render_logo_entry(token)
 
     def render_image_entry(self, token):
         if token.src is not None:
             return self._image_html(token)
         else:
             return ""
-            
+
     def render_text_entry(self, token):
         pre = "<p>"
         post = "</p>"
@@ -106,30 +122,24 @@ class Renderer(HTMLRenderer):
         text = token.text
         if token.classes is not None:
             html = "\n".join(
-                    [
-                        parent_o,
-                        self._i_image_html(token),
-                        f'<a href="{url}">{text}</a>',
-                        parent_c
-                    ]
-                )
-        else:    
+                [
+                    parent_o,
+                    self._i_image_html(token),
+                    f'<a href="{url}">{text}</a>',
+                    parent_c,
+                ]
+            )
+        else:
             if token.src is None:
-                html = "\n".join(
-                    [
-                        parent_o,
-                        f'<a href="{url}">{text}</a>',
-                        parent_c
-                    ]
-                )
-                
+                html = "\n".join([parent_o, f'<a href="{url}">{text}</a>', parent_c])
+
             else:
                 html = "\n".join(
                     [
                         parent_o,
                         self._image_html(token),
-                        f'<a href="{url}">{text}</a>', 
-                        parent_c
+                        f'<a href="{url}">{text}</a>',
+                        parent_c,
                     ]
                 )
         return dedent(html)
@@ -142,10 +152,8 @@ class Renderer(HTMLRenderer):
         </div>
         </div>
         """
-        
-        return dedent(
-            template.format(inner=self.render_inner(token))
-        )
+
+        return dedent(template.format(inner=self.render_inner(token)))
 
     def render_social_block(self, token):
         template = '<div class="social">\n{inner}\n</div>'
@@ -153,7 +161,9 @@ class Renderer(HTMLRenderer):
         return template.format(inner=inner)
 
     def render_description_block(self, token):
-        template = '<div class="description">\n<div class="content">\n{inner}\n</div>\n</div>'
+        template = (
+            '<div class="description">\n<div class="content">\n{inner}\n</div>\n</div>'
+        )
         inner = self.render_inner(token)
         return template.format(inner=inner)
 
@@ -179,9 +189,7 @@ class MainRenderer(Renderer):
         </div>
         </main>
         """
-        return dedent(
-            template.format(main=self.render_inner(token))
-        )
+        return dedent(template.format(main=self.render_inner(token)))
 
 
 class SideBarRenderer(Renderer):

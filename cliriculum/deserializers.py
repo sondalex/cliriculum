@@ -1,42 +1,25 @@
 from datetime import date
 from typing import Union, List, Dict
+from collections import UserDict
 
 
-class Dates:
+class Dates(UserDict):
     """
     Deserializer of date metadata
+
+    Examples
+    --------
+    >>> d = load_json("dates.json")
+    >>> dates = Dates(d)
 
     Attributes
     ----------
     periods: List[Periods]
     """
 
-    def __init__(self, dictionary):
-        """_summary_
-        Examples
-        --------
-        >>> d = load_json("dates.json")
-        >>> dates = Dates(d)
-        """
-
-        p = []
-        for key in list(dictionary.keys()):
-            p.append(Period(id=key, **dictionary[key]))
-        self.periods = p
-
-    def get_period(self, id):
-        """
-        Get period by id.
-        First match returned.
-
-        Parameters
-        ----------
-        id : _type_
-            _description_
-        """
-        for period in self.periods:
-            if period.idx == id:
-                return period
+    def __setitem__(self, key, item):
+        new_value = Period(id=key, **item)
+        self.data[key] = new_value
 
 
 class Period:
@@ -126,7 +109,7 @@ class URL:
         classes: Union[str, None] = None,
         text: Union[str, None] = None,
         width: Union[str, None] = None,
-        height: Union[str, None] = None
+        height: Union[str, None] = None,
     ):
         self.logo = logo
         self.url = url
@@ -184,7 +167,13 @@ class Profile(URL):
     """
     Profile fields.
     """
-    def __init__(self, picture: Union[str, None], width: Union[str, None] = "200px", height: Union[str, None] = "200px"):
+
+    def __init__(
+        self,
+        picture: Union[str, None],
+        width: Union[str, None] = "200px",
+        height: Union[str, None] = "200px",
+    ):
         # just treat picture as logo
         logo = picture
         super().__init__(url=None, width=width, height=height, logo=logo)
@@ -204,12 +193,13 @@ class Contact:
     number: Number
     node: A pathlib node. To use with path arithmetic
     """
+
     def __init__(self, name, profession, email, website, socials, number, profile):
         """
 
         Examples
         --------
-
+        >>> from cliriculum.parsers import load_json
         >>> c = load_json("contact.json")
         >>> Contact(**c)
         """
@@ -220,6 +210,50 @@ class Contact:
 
         self.website = Website(**website)
         self.socials = Socials(socials)
-        
+
         self.number = Number(**number)
         self.profile = Profile(**profile)
+
+
+class Location:
+    def __init__(self, id, location: str, classes: Union[str, None] = None):
+        """_summary_
+
+        Parameters
+        ----------
+        id : _type_
+            _description_
+        location : str
+            _description_
+        classes : Union[str, None], optional
+            _description_, by default None
+        """
+        self.classes = classes
+        self.location = location
+        self.idx = id
+
+
+class Locations(UserDict):
+    """
+
+    Parameters
+    ----------
+    UserDict : _type_
+
+    Example
+    -------
+    >>> from cliriculum.parsers import load_json
+    >>> from cliriculum.deserializers import Locations
+    >>> l = load_json("location.json")
+    >>> Locations(l)
+    """
+
+    # def __init__(self, dict=None):
+    #     if dict is not None:
+    #         super().__init__(**dict)  # leverage UserDict kwargs argument.
+    #     else:
+    #         super().__init__()
+
+    def __setitem__(self, key, item):
+        new_value = Location(id=key, **item)
+        self.data[key] = new_value

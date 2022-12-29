@@ -1,6 +1,6 @@
 from cliriculum.markdown import ParseMd
 from cliriculum.renderers import SideBarRenderer, MainRenderer
-from cliriculum.deserializers import Contact, Dates
+from cliriculum.deserializers import Contact, Dates, Locations
 from cliriculum.markdown import DescriptionBlock
 from cliriculum.loaders import load_json
 from warnings import warn
@@ -61,17 +61,29 @@ class SideBarHTML:
 
 
 class MainHTML:
-    def __init__(self, path, dates):
+    def __init__(self, path, dates, location: Union[str, None] = None):
         self.parsed = ParseMd(path)
         dates_d = load_json(dates)
         dates_o = Dates(dates_d)
+
         self.parsed.add_dates(dates_o)
+        if location is not None:
+            location_d = load_json(location)
+            location_o = Locations(location_d)
+            self.parsed.add_location(location_o)
+
         with MainRenderer() as r:
             self.html = r.render(self.parsed.doc)
 
 
 class ResumeHTML:
-    def __init__(self, sidebar: SideBarHTML, main: MainHTML, stylesheet:Union[str, None], rsrc_dst=Union[str, None]):
+    def __init__(
+        self,
+        sidebar: SideBarHTML,
+        main: MainHTML,
+        stylesheet: Union[str, None],
+        rsrc_dst=Union[str, None],
+    ):
         """
         Render Resume
 
@@ -98,14 +110,24 @@ class ResumeHTML:
         else:
             _ = ""
         self.additionalcss = _
-    
-    def join(self) -> str:    
+
+    def join(self) -> str:
         body = self.sidebar.html + "\n" + self.main.html  # union of sidebar and main
         template = "<html>{head}<body>{body}</body></html>"
-        return template.format(head=HEAD.format(additionalcss=self.additionalcss), body=body)
+        return template.format(
+            head=HEAD.format(additionalcss=self.additionalcss), body=body
+        )
 
 
-def resume(sidebar_md: str, main_md: str, dates: str, contact: str, rsrc_dst: Union[str, None] = None, stylesheet: Union[str, None]=None) -> str:
+def resume(
+    sidebar_md: str,
+    main_md: str,
+    dates: str,
+    contact: str,
+    rsrc_dst: Union[str, None] = None,
+    stylesheet: Union[str, None] = None,
+    location: Union[str, None] = None,
+) -> str:
     """
 
     Parameters
@@ -125,14 +147,16 @@ def resume(sidebar_md: str, main_md: str, dates: str, contact: str, rsrc_dst: Un
     -------
     str
         HTML representation of the resume
-    
+
     Examples
     --------
     >>> from cliriculum import resume
     >>> html = resume(sidebar_md="sidebar.md", main_md="main.md", contact="contact.json", dates="dates.json")
     """
     sidebar = SideBarHTML(path=sidebar_md, contact=contact, rsrc_dst=rsrc_dst)
-    main = MainHTML(path=main_md, dates=dates)
-    resume = ResumeHTML(main=main, sidebar=sidebar, stylesheet=stylesheet, rsrc_dst=rsrc_dst)
+    main = MainHTML(path=main_md, dates=dates, location=location)
+    resume = ResumeHTML(
+        main=main, sidebar=sidebar, stylesheet=stylesheet, rsrc_dst=rsrc_dst
+    )
     html = resume.join()
     return html
