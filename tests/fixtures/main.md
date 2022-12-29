@@ -12,6 +12,11 @@ If you wish more customization you can use `css`.
   in URL and logo entries.
 * ...
 
+## Other identifier {#a-secondid}
+
+A bit of text
+
+
 # More sections
 
 * With lots of bullet point

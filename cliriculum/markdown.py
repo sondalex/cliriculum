@@ -2,10 +2,10 @@ import re
 from mistletoe.block_token import Heading
 from mistletoe.span_token import RawText
 from cliriculum.deserializers import Dates, Contact, Locations
-from typing import List, Union, Type, Any
+from typing import List, Union, Type, Any, Tuple
 import os
 from cliriculum.parsers import Document
-
+from collections import OrderedDict
 
 class URLEntry:
     def __init__(self, src, width, height, url, classes, text):
@@ -151,34 +151,72 @@ class ParseMd:
             self.doc = Document(f)
         self.periods = []
         self.top = None
-        self.h_level_w_id = []
-        self.heading_index = {}  # maybe should set it to private
+        self.heading_index = OrderedDict()  # maybe should set it to private
 
     def _isHeading(self, leaf):
         if isinstance(leaf, Heading):
             return True
 
-    def _headings_with_id_idx(self, doc: Document) -> List[int]:
+    def _headings_with_id_idx(self, doc: Document) -> OrderedDict:
         """_summary_
-        Iterates over the first layer leaves, and checks whether
-        Level two headings have an id in the form of {#id}.
-        Raises
-        ------
-        ValueError
 
-        Return
-        ------
-        Single index
-        """
-        idx = []
+        Parameters
+        ----------
+        doc : Document
+            _description_
+
+        Returns
+        -------
+        OrderedDict
+            An ordered dict with key corresponding to position in first tree layer
+            and value the string identifier extracted from the header. 
+        """        
+        heading_index = OrderedDict()
         for i, leaf in enumerate(doc.children):
             # issubclass
             # isinstance
             if isinstance(leaf, Heading):
-                if (leaf.level == 2) and self._has_heading_id(leaf):
-                    idx.append(i)
-        return idx
+                outer_and_inner_span = self._get_heading_id_spans(leaf)
+                if (leaf.level == 2) and (outer_and_inner_span is not None):
+                    raw_leaf = leaf.children[0]
+                    _, indice_span = outer_and_inner_span
+                    indice = raw_leaf.content[indice_span[0]:indice_span[1]]
+                    heading_index[i] = indice
+        return heading_index
 
+    def _get_heading_id_spans(self, node) -> Union[Tuple[Tuple[int, int], Tuple[int, int]], None]:
+        """_summary_
+
+        Parameters
+        ----------
+        node : _type_
+            _description_
+
+        Returns
+        -------
+        Union[Tuple[str, str], None]
+            If match returns the outer and inner span of match.
+        
+        Example
+        -------
+        >>> self._get_heading_id_spans(node)
+        >>> ((7, 15), (9, 14))
+
+        Raises
+        ------
+        ValueError
+            _description_
+        """
+        if self._isHeading(node):
+            raw_leaf = node.children[0]
+            match_obj = self.heading_id_pattern.search(raw_leaf.content)
+            if match_obj is not None:
+                return match_obj.regs
+            else:
+                return None
+        else:
+            raise ValueError("Wrong type of node")
+    
     def _has_heading_id(self, node):
         if self._isHeading(node):
             raw_leaf = node.children[0]  # select raw content
@@ -231,11 +269,9 @@ class ParseMd:
             in the renderer.
         """
         if len(self.heading_index) == 0:
-            h_level_w_id = self._headings_with_id_idx(self.doc)
-            self.h_level_w_id = h_level_w_id
+            self.heading_index = self._headings_with_id_idx(self.doc)
             replace = True
         else:
-            h_level_w_id = self.h_level_w_id
             replace = False
             # I need to set a dictionnary:
             # with key corresponding to key, and value the position in the tree
@@ -244,31 +280,21 @@ class ParseMd:
             # This is the difficulty all methods which add an element need to control for this.
             # add_contact does not need to consider this info but needs to update it.
 
-        for i in range(len(h_level_w_id)):
-            pos = h_level_w_id[i]
-            if i > 0:
-                # increment by one to correct for the added node (added at i-1)
-                pos = pos + 1
-                self.h_level_w_id[i] = pos  # what about first element? Its position
-                # does not need to be incremented since nothing has been added.
+        for i in range(len(self.heading_index)):
+            pos = list(self.heading_index.keys())[i]
             # Match with Dates
             if replace:  # replace on first call
                 heading = self.doc.children[pos]
                 # extract id
+                outer_span, inner_span = self._get_heading_id_spans(heading)
                 raw_leaf = heading.children[0]
-                match_obj = self.heading_id_pattern.search(raw_leaf.content)
-                _ = match_obj.regs[-1]
-                indice = raw_leaf.content[_[0] : _[1]]
-                _ = match_obj.regs[0]
-
-                self.heading_index.update({pos: indice})
-
+                indice = raw_leaf.content[inner_span[0]:inner_span[1]]
+                to_replace = raw_leaf.content[outer_span[0]:outer_span[1]]
                 self.doc.children[pos].children[0].content = raw_leaf.content.replace(
-                    raw_leaf.content[_[0] : _[1]], ""
+                    to_replace, ""
                 ).rstrip()  # replace the {#id} with empty string
             else:
                 indice = self.heading_index[pos]
-
             try:
                 node = nodes[indice]
             except KeyError:
@@ -283,6 +309,11 @@ class ParseMd:
                 self._add_to_top_paragraph(
                     leveltwo_header_idx=pos, new_node=new_node
                 )  # operates directly on AST
+            
+            # Correct registered indices for addition of node      
+            h_index_items = list(self.heading_index.items())
+            self.heading_index = OrderedDict([(key, value) for key, value in h_index_items[0:i+1]] + [(key + 1, value) for key, value in h_index_items[i+1:]])
+
         return self
 
     def add_dates(self, dates: Dates):
@@ -405,7 +436,6 @@ class ParseMd:
             
             # increment all keys by 1
             self.heading_index = {key + 1: value for key, value in self.heading_index.items()}
-            self.h_level_w_id = [pos + 1 for pos in self.h_level_w_id]
 
         return self
 
