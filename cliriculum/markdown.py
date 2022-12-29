@@ -273,12 +273,6 @@ class ParseMd:
             replace = True
         else:
             replace = False
-            # I need to set a dictionnary:
-            # with key corresponding to key, and value the position in the tree
-
-            # needs to be updated if any node is added.
-            # This is the difficulty all methods which add an element need to control for this.
-            # add_contact does not need to consider this info but needs to update it.
 
         for i in range(len(self.heading_index)):
             pos = list(self.heading_index.keys())[i]

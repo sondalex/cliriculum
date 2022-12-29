@@ -52,7 +52,6 @@ class Renderer(HTMLRenderer):
         return template.format(classes=token.classes)
 
     def render_logo_entry(self, token):
-        print(token)
         text = token.title
         parent_o = '<div class="box">'
         parent_c = "</div>"
@@ -61,7 +60,6 @@ class Renderer(HTMLRenderer):
             html = "\n".join(
                 [parent_o, self._i_image_html(token), f"<span>{text}</span>", parent_c]
             )
-            # print(html)
         else:
             if token.src is None:
                 html = "\n".join([parent_o, f"<span>{text}</span>", parent_c])

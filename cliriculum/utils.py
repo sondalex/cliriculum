@@ -33,16 +33,9 @@ def get_resources_nodes(root, tree, resrcs: List) -> List[PosixPath]:
     """
     package = ".".join(tree.relative_to(root).parts)  # init
     for node in tree.iterdir():
-        # print(node)
-        # print(package)
-        # le node reste le node. Il faut l'updater
         if node.is_dir():
-            # if (node / "__init__.py").exists():
             get_resources_nodes(root=root, tree=node, resrcs=resrcs)
         else:
-            # node is file
-            # print(node.name)
-            # print(package)
             if (
                 resources.is_resource(package, node.name)
                 and node.parts[-1] != "__init__.py"
