@@ -18,7 +18,6 @@ jobs:
         pip install pytest
         pip install .
         pip install .[test]
-      -name
       - name: Run pytest
         run: |
           pytest
