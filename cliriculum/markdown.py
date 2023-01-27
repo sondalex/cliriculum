@@ -7,6 +7,7 @@ import os
 from cliriculum.parsers import Document
 from collections import OrderedDict
 
+
 class URLEntry:
     def __init__(self, src, width, height, url, classes, text):
         self.src = src
@@ -169,8 +170,8 @@ class ParseMd:
         -------
         OrderedDict
             An ordered dict with key corresponding to position in first tree layer
-            and value the string identifier extracted from the header. 
-        """        
+            and value the string identifier extracted from the header.
+        """
         heading_index = OrderedDict()
         for i, leaf in enumerate(doc.children):
             # issubclass
@@ -180,11 +181,13 @@ class ParseMd:
                 if (leaf.level == 2) and (outer_and_inner_span is not None):
                     raw_leaf = leaf.children[0]
                     _, indice_span = outer_and_inner_span
-                    indice = raw_leaf.content[indice_span[0]:indice_span[1]]
+                    indice = raw_leaf.content[indice_span[0] : indice_span[1]]
                     heading_index[i] = indice
         return heading_index
 
-    def _get_heading_id_spans(self, node) -> Union[Tuple[Tuple[int, int], Tuple[int, int]], None]:
+    def _get_heading_id_spans(
+        self, node
+    ) -> Union[Tuple[Tuple[int, int], Tuple[int, int]], None]:
         """_summary_
 
         Parameters
@@ -196,7 +199,7 @@ class ParseMd:
         -------
         Union[Tuple[str, str], None]
             If match returns the outer and inner span of match.
-        
+
         Example
         -------
         >>> self._get_heading_id_spans(node)
@@ -216,7 +219,7 @@ class ParseMd:
                 return None
         else:
             raise ValueError("Wrong type of node")
-    
+
     def _has_heading_id(self, node):
         if self._isHeading(node):
             raw_leaf = node.children[0]  # select raw content
@@ -282,8 +285,8 @@ class ParseMd:
                 # extract id
                 outer_span, inner_span = self._get_heading_id_spans(heading)
                 raw_leaf = heading.children[0]
-                indice = raw_leaf.content[inner_span[0]:inner_span[1]]
-                to_replace = raw_leaf.content[outer_span[0]:outer_span[1]]
+                indice = raw_leaf.content[inner_span[0] : inner_span[1]]
+                to_replace = raw_leaf.content[outer_span[0] : outer_span[1]]
                 self.doc.children[pos].children[0].content = raw_leaf.content.replace(
                     to_replace, ""
                 ).rstrip()  # replace the {#id} with empty string
@@ -303,10 +306,13 @@ class ParseMd:
                 self._add_to_top_paragraph(
                     leveltwo_header_idx=pos, new_node=new_node
                 )  # operates directly on AST
-            
-            # Correct registered indices for addition of node      
+
+            # Correct registered indices for addition of node
             h_index_items = list(self.heading_index.items())
-            self.heading_index = OrderedDict([(key, value) for key, value in h_index_items[0:i+1]] + [(key + 1, value) for key, value in h_index_items[i+1:]])
+            self.heading_index = OrderedDict(
+                [(key, value) for key, value in h_index_items[0 : i + 1]]
+                + [(key + 1, value) for key, value in h_index_items[i + 1 :]]
+            )
 
         return self
 
@@ -427,9 +433,11 @@ class ParseMd:
             self.doc.children.append(contact_block)
         else:
             self.doc.children.insert(0, contact_block)
-            
+
             # increment all keys by 1
-            self.heading_index = {key + 1: value for key, value in self.heading_index.items()}
+            self.heading_index = {
+                key + 1: value for key, value in self.heading_index.items()
+            }
 
         return self
 

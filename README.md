@@ -14,9 +14,11 @@ pip install git+https://github.com/sondalex/cliriculum.git
 * [fontawesome](https://fontawesome.com/)
 * [pagedjs](https://pagedjs.org/)
 
-Both are bundled in package.
+Both are bundled in the package.
 
 ## Structure
+
+<img src="https://raw.githubusercontent.com/sondalex/cliriculum/master/example/output.png" width=200/>
 
 * Main: The right part of the page(s). Place where generally experiences, past jobs, past studies, ... are displayed.
   The content gets generated from Markdown file `--main=<your Markdown file>` 
@@ -25,11 +27,12 @@ Both are bundled in package.
   1) `contact`: gets generated from JSON file: `--contact=<your JSON file for contact details>`
   2) `description`: gets generated from markdown file `--description=<your description.md>`
 
-  Sidebar supports one page only. The colour is continued to next pages. 
+  Sidebar supports one page only, however the colour is continued to next pages. 
 
 Additional metadata:
 
 * dates.json: A JSON file with keys matching titles ids defining a start and end information. During rendering the dates are added to the top of the paragraph of the level two headings with matching id.
+
 Heading ids are parsed uniquely for level two headings. Dates should be under the
 [ISO 8601](https://en.wikipedia.org/wiki/ISO_8601) format.
 
@@ -55,6 +58,18 @@ inline css. See sphinx documentation for example.
 Currently, I chose not to use this method.
 
 
+## Rendering
+
+* Export to HTML
+* Export to PDF (via browser or headless mode)
+
+## Cli
+
+```
+cliriculum --main="main.md" --description="sidebar.md" --contact="contact.json" --dates="dates.json"
+```
+
+
 ## Converting to PDF
 
 Open with the generated HTML with your web browser 
@@ -64,16 +79,14 @@ The HTML representation of the document relies
 on [paged.js](https://pagedjs.org/) a great library
 intended to create PDF compatible HTML books.  
 
-## Cli
+Or set `--pdf-output` flag.
 
+```console
+cliriculum --main="main.md" --description="sidebar.md" --contact="contact.json" --dates="dates.json" --pdf-output=output.pdf
 ```
-cliriculum --main="main.md" --description="sidebar.md" --contact="contact.json" --dates="dates.json"
-```
 
-## Rendering
+**Note**: a local server must be running
 
-* Export to HTML
-* Export to PDF (via browser)
 
 ## Styling
 
@@ -85,29 +98,16 @@ To encounter this behaviour you can specify a secondary stylesheet.
 cliriculum --main="main.md" --description="sidebar.md" --contact="contact.json" --dates="dates.json" --stylesheet="custom.css"
 ```
 
-
-## Resources
-
-
-
 ## Example
 
-An example is accessible at [](example/index.html)
+An example can be viewed at [example/index.html](https://sondalex.github.io/cliriculum/_static/example/index.html)
 
 ## Language support
 
 English only.
 
-## Development
+## Warning
 
-For the moment there is almost no test coverage use with care.
 No XSS injection prevention.
 Make sure to adopt good security practices if you wish to build a web service from
 this package.
-
-
-# TODO
-
-* Escape html and url in html renderer.
-* A fontawesome updater using their GraphQl API.
-* Fix slight blur of sidebar

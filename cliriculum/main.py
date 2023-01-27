@@ -1,11 +1,11 @@
 import argparse
 import os
+import sys
 from pathlib import Path
+from typing import Union
 from cliriculum.resume import resume
 from cliriculum.utils import copy_resources
-from typing import Union
-
-# from importlib.resources.abc import Traversable
+from cliriculum.pdf import chromium_print
 
 
 def make_resume(
@@ -17,20 +17,16 @@ def make_resume(
     overwrite: bool,
     stylesheet: Union[str, None],
     location: Union[str, None] = None,
+    output: Union[str, None] = None,
 ):
     """
     Generates resume
 
-    See :py:mod:
+    See :py:mod:`cliriculum.resume`
     """
     if os.path.isdir(directory):
-        if overwrite is True:
-            pass
-        else:
-            error = """
-            Folder already exists. If you wish to overwrite its content, set `overwrite` to True
-            """
-            raise FileExistsError(error)
+        os.makedirs(directory, exist_ok=overwrite)
+
     elif os.path.isfile(directory) is False:
         os.mkdir(directory)
     else:
@@ -51,6 +47,8 @@ def make_resume(
     # copy dependencies
     print(f"Copying files to {directory}")
     copy_resources(directory)
+    if output is not None:
+        chromium_print(directory=directory, filename=output)
 
 
 def cli() -> argparse.ArgumentParser:
@@ -121,6 +119,15 @@ def cli() -> argparse.ArgumentParser:
         help="A file specifying locations to map to 2nd level headers by id",
         default=None,
     )
+    parser.add_argument(
+        "--pdf-output",
+        dest="output",
+        action="store",
+        type=str,
+        default=None,
+        required=False,
+        help="If filename the pdf will be generated and saved to '--directory + --pdf-output', if path like it will be saved to provided path",
+    )
     return parser
 
 
@@ -137,6 +144,7 @@ def main():
         overwrite=overwrite,
         stylesheet=args.stylesheet,
         location=args.location,
+        output=args.output,
     )
 
 

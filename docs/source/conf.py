@@ -31,7 +31,14 @@ html_static_path = ['_static']
 import os
 import sys
 
-sys.path.insert(0, os.path.abspath('../cliriculum'))
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon']
+sys.path.insert(0, os.path.abspath('../..'))
+extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'myst_parser', "sphinx.ext.autosummary", 'autoapi.extension']
 
 html_theme = "furo"
+autosummary_generate = True
+autosummary_generate_overwrite = True
+
+autoapi_dirs = ['../../cliriculum']
+autoapi_add_toctree_entry = False
+autoapi_ignore = ['*parsers.py']
+autoapi_keep_files = False

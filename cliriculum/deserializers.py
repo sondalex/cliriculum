@@ -33,9 +33,7 @@ class Period:
     logo: Union[str, None]
     width: Union[str, None]
     height: Union[str, None]
-    classes: Union[str, None]
-    classes has priority over logo in
-    :py:mod:renderers
+    classes: Union[str, None] classes has priority over logo in :py:mod:`cliriculum.renderers`
     """
 
     def __init__(
@@ -98,7 +96,7 @@ class URL:
     logo: str
     url: str
     classes: str
-        See :py:Period
+        See :py:class:`Period`
     text: str
     """
 

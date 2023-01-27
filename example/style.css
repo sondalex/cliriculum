@@ -16,6 +16,10 @@
   --aside-width: var(--sidebar-width)
 }
 
+@media print {
+/*Fixes headless print disfunctioning*/
+}
+
 #profile_pic {
   border-radius: 50%;
   object-position: center;
