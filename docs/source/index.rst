@@ -3,18 +3,24 @@
    You can adapt this file completely to your liking, but it should at least
    contain the root `toctree` directive.
 
-Welcome to cliriculum's documentation!
-======================================
+cliriculum's documentation
+==========================
+
+`cliriculum` is a Python utility to create resume more effectively.
+
 
 .. toctree::
-   :maxdepth: 2
-   :caption: Contents:
+   :maxdepth: 1
+
+   getting_started/index
+
+   user_guide/index
+
+   api
+   
+   development/index
 
 
 
-Indices and tables
-==================
+   news/index
 
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`

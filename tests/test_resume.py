@@ -1,6 +1,7 @@
 from cliriculum.resume import resume, SideBarHTML, MainHTML, ResumeHTML
 import pytest
 import os
+
 # could paremetrize with location
 
 
@@ -30,8 +31,24 @@ def test_resume(location, tmp_path, fixtures_path, request):
     add_css = str(fixtures_path / "custom.css")
     html = resume(sidebar_md=s, main_md=m, dates=d, contact=c)
     with pytest.raises(ValueError):
-        resume(sidebar_md=s, main_md=m, dates=d, contact=c, rsrc_dst=None, stylesheet="apath", location=request.getfixturevalue(location))
-    resume(sidebar_md=s, main_md=m, dates=d, contact=c, rsrc_dst=tmp_path, stylesheet=add_css, location=request.getfixturevalue(location))
+        resume(
+            sidebar_md=s,
+            main_md=m,
+            dates=d,
+            contact=c,
+            rsrc_dst=None,
+            stylesheet="apath",
+            location=request.getfixturevalue(location),
+        )
+    resume(
+        sidebar_md=s,
+        main_md=m,
+        dates=d,
+        contact=c,
+        rsrc_dst=tmp_path,
+        stylesheet=add_css,
+        location=request.getfixturevalue(location),
+    )
     files = os.listdir(tmp_path)
     assert set(files).symmetric_difference(["custom.css", "image.png"]) == set()
 
@@ -44,5 +61,10 @@ def test_resume_html(location, tmp_path, fixtures_path, request):
     c = str(fixtures_path / "contact.json")
     sidebar = SideBarHTML(path=s, contact=c, rsrc_dst=tmp_path)
     main = MainHTML(path=m, dates=d, location=request.getfixturevalue(location))
-    resume = ResumeHTML(main=main, sidebar=sidebar, stylesheet=fixtures_path / "custom.css", rsrc_dst=tmp_path)
+    resume = ResumeHTML(
+        main=main,
+        sidebar=sidebar,
+        stylesheet=fixtures_path / "custom.css",
+        rsrc_dst=tmp_path,
+    )
     assert resume.additionalcss != ""
