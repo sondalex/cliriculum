@@ -16,7 +16,8 @@ test = [
 doc = [
     "myst-parser",
     "sphinx",
-    "sphinx-autoapi"
+    "sphinx-autoapi",
+    "furo"
 ]
 
 [project.scripts]
