@@ -1,6 +1,6 @@
 # cliriculum
 
-[![Run Unit Tests](https://github.com/sondalex/cliriculum/actions/workflows/run-test.yaml/badge.svg)](https://github.com/sondalex/cliriculum/actions/workflows/run-test.yaml)
+[![Run Unit Tests](https://github.com/sondalex/cliriculum/actions/workflows/run-test.yaml/badge.svg?branch=master)](https://github.com/sondalex/cliriculum/actions/workflows/run-test.yaml)
 
 Create your CSV with a simple python CLI tool.
 Pure python implementation no system dependencies required.
