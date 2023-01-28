@@ -1,9 +1,10 @@
 # cliriculum
 
 [![Run Unit Tests](https://github.com/sondalex/cliriculum/actions/workflows/run-test.yaml/badge.svg?branch=master)](https://github.com/sondalex/cliriculum/actions/workflows/run-test.yaml)
+[![Build Doc](https://github.com/sondalex/cliriculum/actions/workflows/doc-build.yaml/badge.svg?branch=master)](https://github.com/sondalex/cliriculum/actions/workflows/doc-build.yaml)
 
-Create your CSV with a simple python CLI tool.
-Pure python implementation no system dependencies required.
+
+Create your CV/Resume with a simple Python CLI tool.
 
 ## Installation
 
