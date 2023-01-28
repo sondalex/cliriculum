@@ -5,8 +5,8 @@ from importlib import resources
 import os
 
 
-def get_resources_nodes(root, tree, resrcs: List) -> List[PosixPath]:
-    """_summary_
+def get_resources_nodes(root, tree, resrcs: List, skip_dirs: Iterable = {"__pycache__"}) -> List[PosixPath]:
+    """
     Get resources nodes recursively.
     Parameters
     ----------
@@ -20,7 +20,9 @@ def get_resources_nodes(root, tree, resrcs: List) -> List[PosixPath]:
     resrcs:
         Resources should be empty list for first call.
         Expands on each recursive call.
-
+    skip_dirs: Iterable
+        Directories in which resources should not be fetched.
+        Default = {'__pycache__'}
     Returns
     -------
     List[PosixPath]
@@ -33,11 +35,11 @@ def get_resources_nodes(root, tree, resrcs: List) -> List[PosixPath]:
     """
     package = ".".join(tree.relative_to(root).parts)  # init
     for node in tree.iterdir():
-        if node.is_dir():
+        if node.is_dir() and node.parts[-1] not in set(skip_dirs):
             get_resources_nodes(root=root, tree=node, resrcs=resrcs)
         else:
             if (
-                resources.is_resource(package, node.name)
+                resources.files(package).joinpath(node).is_file()
                 and node.parts[-1] != "__init__.py"
             ):
                 resrcs.append(node)
@@ -72,6 +74,7 @@ def copy_resources(directory: str, resource_root: str = "cliriculum.data"):
             os.makedirs(target.parent)
 
         copy2(src=source, dst=target)
+        # assert False == True
 
 
 def copy_files(srcs: Iterable[Union[str, Path]], dst: Union[Path, str]) -> None:

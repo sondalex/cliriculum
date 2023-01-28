@@ -1,3 +1,7 @@
+# V0.1.5.1
+
+* Fixed https://github.com/sondalex/cliriculum/issues/16 . I.e support for Python > 3.9
+
 ## V0.1.5
 
 * Added wrapper to chromium headless print. Now resume creation can be 100% automated. Solves https://github.com/sondalex/cliriculum/issues/10
