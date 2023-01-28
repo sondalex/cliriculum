@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "cliriculum"
 description = "A python cli tool to rapidly create an html or PDF resume"
 readme = "README.md"
-version = "0.1.5"
+version = "0.1.5.1"
 dependencies = [
     "mistletoe"
 ]
@@ -33,6 +33,10 @@ packages = ["cliriculum"]
 [tool.setuptools.package-data]
 cliriculum = ["data/*", "data/*/*", "data/*/*/*"]
 
+[tool.setuptools.exclude-package-data]
+cliriculum = ["data/__pycache__/", "data/*/__pycache__", "data/*/*/__pycache__"]
+
+# pycache gets generated anyway
 
 [tool.pytest.ini_options]
 testpaths = [
