@@ -38,6 +38,7 @@ def get_resources_nodes(root, tree, resrcs: List, skip_dirs: Iterable = {"__pyca
         if node.is_dir() and node.parts[-1] not in set(skip_dirs):
             get_resources_nodes(root=root, tree=node, resrcs=resrcs)
         else:
+            print(f"package: {package}, node: {node}")
             if (
                 resources.files(package).joinpath(node).is_file()
                 and node.parts[-1] != "__init__.py"
