@@ -11,5 +11,5 @@ image.jpeg
 !tests/fixtures/image.png
 !example/image.png
 !example/output.png
-
+dist/
 venv/
