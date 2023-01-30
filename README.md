@@ -10,7 +10,7 @@ Create your CV/Resume with a simple Python CLI tool.
 ## Installation
 
 ```console
-pip install git+https://github.com/sondalex/cliriculum.git
+pip install cliriculum
 ```
 
 ## Web Dependencies
