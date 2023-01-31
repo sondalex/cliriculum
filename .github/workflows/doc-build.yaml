@@ -1,6 +1,14 @@
 name: Build Documentation and Upload
 # List of actions: https://github.com/marketplace?type=actions
-on: [push, pull_request]
+# Build Documentation for master only and upload master only.
+on:
+  push:
+    branches:
+      - master
+  pull_request:
+    branches:
+      - master
+
 
 permissions:
   contents: read
@@ -33,3 +41,4 @@ jobs:
       - name: Deploy to GitHub Pages
         id: deployment
         uses: actions/deploy-pages@v1
+
