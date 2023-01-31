@@ -7,10 +7,15 @@ name = "cliriculum"
 description = "A python cli tool to rapidly create an html or PDF resume"
 readme = "README.md"
 version = "0.1.5.1"
+license = {file = 'LICENSE.md'}
 dependencies = [
     "mistletoe"
 ]
+requires-python = '>=3.9'
 
+[project.urls]
+homepage="https://github.com/sondalex/cliriculum"
+documentation="https://pandas.pydata.org/docs/"
 
 [project.optional-dependencies]
 test = [
