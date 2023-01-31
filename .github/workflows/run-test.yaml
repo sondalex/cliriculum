@@ -1,5 +1,12 @@
 name: Run Unit Tests
-on: [push, pull_request]
+on: 
+  push:
+    branches:
+      - master
+      # - 0.1.x No need for the moment
+  pull_request:
+    branches:
+      - master  # avoids activation of workflow if pull request on another branch
 jobs:
   run_tests:
     runs-on: ubuntu-latest
