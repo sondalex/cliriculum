@@ -19,8 +19,15 @@ jobs:
       - name: Build wheels & sdist
         run: python -m build --sdist --wheel --outdir dist/
       - name: Publish to Test PyPi
+        if: ${{ vars.TEST_PYPI == 'True' }}
         uses: pypa/gh-action-pypi-publish@release/v1
         with:
           password: ${{ secrets.TEST_PYPI_API_TOKEN }}
           repository_url: https://test.pypi.org/legacy/
+      - name: Publish to PyPi
+        # See difference between vars and env https://docs.github.com/en/actions/learn-github-actions/variables#using-the-vars-context-to-access-configuration-variable-values
+        if: ${{ vars.TEST_PYPI == 'False' }}
+        uses: pypa/gh-action-pypi-publish@release/v1
+        with:
+          password: ${{ secrets.PYPI_API_TOKEN }}
 
