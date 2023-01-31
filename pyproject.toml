@@ -6,10 +6,10 @@ build-backend = "setuptools.build_meta"
 name = "cliriculum"
 description = "A python cli tool to rapidly create an html or PDF resume"
 readme = "README.md"
-version = "0.1.5.1.dev1"
+version = "0.1.5.1.dev2"
 license = {file = 'LICENSE.md'}
 dependencies = [
-    "mistletoe"
+    "mistletoe>=1.0.1"
 ]
 requires-python = '>=3.9'
 
@@ -19,15 +19,15 @@ documentation="https://pandas.pydata.org/docs/"
 
 [project.optional-dependencies]
 test = [
-   "pytest",
-   "pypdf",
-   "requests",
+   "pytest>=7.2.1",
+   "pypdf>=3.3.0",
+   "requests>=2.28.2",
 ]
 doc = [
-    "myst-parser",
-    "sphinx",
-    "sphinx-autoapi",
-    "furo"
+    "myst-parser>=0.18.1",
+    "sphinx>=5.3.0",
+    "sphinx-autoapi>=2.0.1",
+    "furo>=2022.12.7"
 ]
 
 [project.scripts]
