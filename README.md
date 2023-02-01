@@ -7,6 +7,7 @@
 [![PyPI](https://img.shields.io/pypi/v/cliriculum)](https://pypi.org/project/cliriculum/)
 ![wheel](https://img.shields.io/pypi/wheel/cliriculum)
 ![pyversion](https://img.shields.io/badge/python-3.9+-blue.svg)
+![Downloads per week](https://img.shields.io/pypi/dw/cliriculum)
 
 Create your CV/Resume with a simple Python CLI tool.
 
