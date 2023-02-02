@@ -1,0 +1,5 @@
+cliriculum/data/fontawesome/webfonts/*.ttf linguist-vendored
+cliriculum/data/fontawesome/webfonts/*.woff2 linguist-vendored
+cliriculum/data/fontawesome/css/*.css linguist-vendored
+cliriculum/data/paged.polyfill.js linguist-vendored
+
