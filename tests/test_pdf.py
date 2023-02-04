@@ -20,10 +20,8 @@ def test_chdir(fixtures_path):
         with requests.get("http://127.0.0.1:8000") as r:
             assert (
                 r.text.find("cliriculum") >= 0
-            ), (
-                r.text
-            )  # check word cliriculum in request (i.e example/index.html
-               # is effectively served)
+            ), r.text  # check word cliriculum in request (i.e example/index.html
+            # is effectively served)
         httpd.shutdown()
     current = os.getcwd()
     assert d.origin == current, f"origin: {d.origin}, current: {current}"
@@ -39,4 +37,3 @@ def test_chromium_print():
     page = reader.pages[0]
     text = page.extract_text()
     assert len(text) > 0, f"text:{text}"
-
