@@ -87,19 +87,26 @@ The HTML representation of the document relies
 on [paged.js](https://pagedjs.org/) a great library
 intended to create PDF compatible HTML books.  
 
+Note: the content has to be distributed by a local server. See [Viewing](##Viewing) for why.
+Python solution: 
+
+```console
+# suppose you saved resume in resume directory (`cliriculum --destination=resume`)
+cd resume/
+python -m http.server
+```
+
 Or set `--pdf-output` flag.
 
 ```console
 cliriculum --main="main.md" --description="sidebar.md" --contact="contact.json" --dates="dates.json" --pdf-output=output.pdf
 ```
 
-**Note**: a local server must be running
-
 
 ## Styling
 
 You can modify style by modifying the generated `style.css` file. However, each time
-you rebuild the resume, the modified style.css gets back to default.
+you overwrite the resume, the modified style.css gets back to default.
 To encounter this behaviour you can specify a secondary stylesheet.
 
 ```console
@@ -119,3 +126,4 @@ English only.
 No XSS injection prevention.
 Make sure to adopt good security practices if you wish to build a web service from
 this package.
+

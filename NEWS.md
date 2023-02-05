@@ -1,3 +1,9 @@
+# V0.1.6
+
+* Added job metadata feature. cli new argument: `--job-metadata` which points to JSON file with job metadata. This metadata, if provided, is used for naming PDF automatically
+* Added tests for `cliriculum.deserializers` and fixed bad management of null values https://github.com/sondalex/cliriculum/issues/36.
+* Fixed regression which constrained to use a profile picture in resume (related to previous point)
+
 # V0.1.5.1
 
 * Fixed https://github.com/sondalex/cliriculum/issues/16 . I.e support for Python > 3.9

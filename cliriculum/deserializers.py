@@ -51,7 +51,6 @@ class Period:
         Parameters
         ----------
         id : str
-            _description_
         start : str
             The start of the period
         end : Union[str, None]
@@ -65,7 +64,6 @@ class Period:
         classes: Union[str, None]
             css classnames
             `classes="class1 class2"`
-
         """
         if start is None:
             raise ValueError(
@@ -94,7 +92,7 @@ class URL:
     Attributes
     ----------
     logo: str
-    url: str
+    url: Union[str, None]
     classes: str
         See :py:class:`Period`
     text: str
@@ -102,7 +100,7 @@ class URL:
 
     def __init__(
         self,
-        url: str,
+        url: Union[str, None],
         logo: Union[str, None] = None,
         classes: Union[str, None] = None,
         text: Union[str, None] = None,
@@ -134,36 +132,31 @@ class Email(URL):
 
 
 class Socials:
-    def __init__(self, socials_list: List[Dict]):
-        """_summary_
+    """
+    Attributes
+    ----------
+    children: List[Social]
+    """
 
+    def __init__(self, socials_list: List[Dict]):
+        """
         Parameters
         ----------
         socials_dict : List[Dict]
             A list of dictionaries
-            with each dictionnary containing
-            keys: "url" and "logo"
-
-        Returns
-        -------
-        _type_
-            _description_
+            Passed to :py:class:`Social` as named arguments
         """
 
-        self.children = [
-            Social(
-                logo=dict_["logo"],
-                url=dict_["url"],
-                classes=dict_["classes"],
-                text=dict_["text"],
-            )
-            for dict_ in socials_list
-        ]
+        self.children = [Social(**dict_) for dict_ in socials_list]
 
 
 class Profile(URL):
     """
     Profile fields.
+
+    Attributes:
+    -----------
+    ...: Attributes from: :py:class:`URL`
     """
 
     def __init__(
@@ -172,9 +165,18 @@ class Profile(URL):
         width: Union[str, None] = "200px",
         height: Union[str, None] = "200px",
     ):
-        # just treat picture as logo
-        logo = picture
-        super().__init__(url=None, width=width, height=height, logo=logo)
+        """
+        Parameters
+        ----------
+        picture : Union[str, None], optional
+            Picture path, by default None
+            passed as super(URL).__init__(logo=picture)
+        width : Union[str, None], optional
+            Width height, by default "200px"
+        height : Union[str, None], optional
+            Picture height, by default "200px"
+        """
+        super().__init__(url=None, width=width, height=height, logo=picture)
 
 
 class Contact:
@@ -189,11 +191,32 @@ class Contact:
     website: Website
     socials: Socials
     number: Number
-    node: A pathlib node. To use with path arithmetic
     """
 
-    def __init__(self, name, profession, email, website, socials, number, profile):
+    def __init__(
+        self,
+        name,
+        profession: Union[str, None] = None,
+        email: Union[str, None] = None,
+        website: Union[str, None] = None,
+        socials: Union[str, None] = None,
+        number: Union[str, None] = None,
+        profile: Union[str, None] = None,
+    ):
         """
+        name:
+            Required
+            Single string (first name last name)
+        profession: Union[str, None]
+            Defaults to None.
+        email: Union[str, None]
+            Defaults to None.
+        website: Union[str, None]
+            Defaults to None.
+        socials: Union[str, None]
+            Defaults to None.
+        number: Union[str, None]
+            Defaults to None
 
         Examples
         --------
@@ -203,9 +226,23 @@ class Contact:
         """
         self.name = name
         self.profession = profession
+        # all classes subclassing URL require url parameter at least
+        # i.e:
+        # - Email
+        # - Website
+        # - Number
+        if email is None:
+            email = {"url": None}  # bypassing restriction
+        if website is None:
+            website = {"url": None}
+        if socials is None:
+            socials = []
+        if profile is None:
+            profile = {"picture": None}
+        if number is None:
+            number = {"url": None}
 
         self.email = Email(**email)
-
         self.website = Website(**website)
         self.socials = Socials(socials)
 
@@ -214,13 +251,13 @@ class Contact:
 
 
 class Location:
-    def __init__(self, id, location: str, classes: Union[str, None] = None):
-        """_summary_
+    def __init__(self, id: str, location: str, classes: Union[str, None] = None):
+        """
 
         Parameters
         ----------
-        id : _type_
-            _description_
+        id : str
+            An id to match with content
         location : str
             _description_
         classes : Union[str, None], optional
@@ -246,12 +283,14 @@ class Locations(UserDict):
     >>> Locations(l)
     """
 
-    # def __init__(self, dict=None):
-    #     if dict is not None:
-    #         super().__init__(**dict)  # leverage UserDict kwargs argument.
-    #     else:
-    #         super().__init__()
-
     def __setitem__(self, key, item):
         new_value = Location(id=key, **item)
         self.data[key] = new_value
+
+
+class Job:
+    def __init__(
+        self, title: Union[str, None] = None, company: Union[str, None] = None
+    ):
+        self.title = title
+        self.company = company

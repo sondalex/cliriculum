@@ -55,9 +55,10 @@ class SideBarHTML:
         doc.children = children
         with SideBarRenderer() as r:
             self.html = r.render(doc)
-        if rsrc_dst is not None:
+        if rsrc_dst is not None and contact_o.profile.logo is not None:
             warn("Currently, specifying rsrc_dst copies only contact profile picture")
             copy_files([contact_o.profile.logo], rsrc_dst)
+        self._contact = contact_o
 
 
 class MainHTML:
@@ -77,6 +78,15 @@ class MainHTML:
 
 
 class ResumeHTML:
+    """
+    Render Resume
+
+    Attributes
+    ----------
+    main: MainHTML
+    sidebar: SideBarHTML
+    """
+
     def __init__(
         self,
         sidebar: SideBarHTML,
@@ -85,16 +95,14 @@ class ResumeHTML:
         rsrc_dst=Union[str, None],
     ):
         """
-        Render Resume
 
         Parameters
         ----------
         sidebar : SideBarHTML
-            _description_
         main : MainHTML
-            _description_
         stylesheet: Path to stylesheet.
         rsrc_dst: See :class:SidebarHTML
+
         Returns
         -------
         _type_
@@ -143,6 +151,9 @@ def resume(
     rsrc_dst: Union[str, None]
         Argument passed to :class:SidebarHTML and :class:ResumeHTML
     stylesheet: Argument passed to :class:ResumeHTML
+    location: Union[str, None]
+        Path to JSON file containing location metadata
+
     Returns
     -------
     str
@@ -153,6 +164,9 @@ def resume(
     >>> from cliriculum import resume
     >>> html = resume(sidebar_md="sidebar.md", main_md="main.md", contact="contact.json", dates="dates.json")
     """
+    warn(
+        "Deprecated in 0.1.6, Resume class should be used instead.", DeprecationWarning
+    )
     sidebar = SideBarHTML(path=sidebar_md, contact=contact, rsrc_dst=rsrc_dst)
     main = MainHTML(path=main_md, dates=dates, location=location)
     resume = ResumeHTML(
@@ -160,3 +174,50 @@ def resume(
     )
     html = resume.join()
     return html
+
+
+class Resume:
+    """
+
+    Attributes
+    ----------
+    stylesheet: str
+    rsrc_dst: str
+    resume: Union[ResumeHTML, None]
+        Is set on __call__ (to ResumeHTML instance)
+
+    Example
+    -------
+    >>> from cliriculum.resume import Resume
+    >>> resume = Resume()  # a callable
+    >>> resume(sidebar_md="sidebar.md", main_md="main.md", contact="contact.json", dates="dates.json")
+    """
+
+    def __init__(
+        self,
+        rsrc_dst: Union[str, None] = None,
+        stylesheet: Union[str, None] = None,
+    ):
+        self.rsrc_dst = rsrc_dst
+        self.stylesheet = stylesheet
+        self.resume = None
+
+    def __call__(
+        self,
+        sidebar_md: str,
+        main_md: str,
+        dates: str,
+        contact: str,
+        location: Union[str, None] = None,
+    ) -> str:
+        sidebar = SideBarHTML(path=sidebar_md, contact=contact, rsrc_dst=self.rsrc_dst)
+        main = MainHTML(path=main_md, dates=dates, location=location)
+        resume = ResumeHTML(
+            main=main,
+            sidebar=sidebar,
+            stylesheet=self.stylesheet,
+            rsrc_dst=self.rsrc_dst,
+        )
+        self.resume = resume  # wich means a text is generated
+        html = resume.join()
+        return html

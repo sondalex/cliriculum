@@ -419,13 +419,16 @@ class ParseMd:
             classes=contact.number.classes,
             text=contact.number.text,
         )
-        profile = ImageEntry(
-            src=os.path.basename(contact.profile.logo),
-            height=contact.profile.height,
-            width=contact.profile.width,
-            id="profile_pic",
-        )
-        children = [profile, name, profession, email, website, socials, number]
+        children = [name, profession, email, website, socials, number]
+
+        if contact.profile.logo is not None:
+            profile = ImageEntry(
+                src=os.path.basename(contact.profile.logo),
+                height=contact.profile.height,
+                width=contact.profile.width,
+                id="profile_pic",
+            )
+            children = [profile] + children
 
         contact_block = ContactBlock(children=children)
 

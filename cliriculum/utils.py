@@ -5,7 +5,9 @@ from importlib import resources
 import os
 
 
-def get_resources_nodes(root, tree, resrcs: List, skip_dirs: Iterable = {"__pycache__"}) -> List[PosixPath]:
+def get_resources_nodes(
+    root, tree, resrcs: List, skip_dirs: Iterable = {"__pycache__"}
+) -> List[PosixPath]:
     """
     Get resources nodes recursively.
     Parameters
@@ -38,7 +40,6 @@ def get_resources_nodes(root, tree, resrcs: List, skip_dirs: Iterable = {"__pyca
         if node.is_dir() and node.parts[-1] not in set(skip_dirs):
             get_resources_nodes(root=root, tree=node, resrcs=resrcs)
         else:
-            print(f"package: {package}, node: {node}")
             if (
                 resources.files(package).joinpath(node).is_file()
                 and node.parts[-1] != "__init__.py"
@@ -96,3 +97,53 @@ def copy_files(srcs: Iterable[Union[str, Path]], dst: Union[Path, str]) -> None:
     for src in srcs:
         file_dst = Path(dst) / os.path.basename(src)
         copy2(src, file_dst)
+
+
+def _case(string, camel_case: bool) -> str:
+    if camel_case is True:
+        string = string.capitalize()
+    else:
+        string = string.lower()
+    return string
+
+
+def _replace_space(string, camel_case):
+    return "_".join(_case(token, camel_case=camel_case) for token in string.split(" "))
+
+
+def auto_filename(name: str, job_title: str, company: str, camel_case: bool) -> str:
+    """
+    Create filename string under the form:
+
+    <name>-resume-<job title>-<company>.pdf if camel_case is False.
+    Or <Name>-Resume-<Job title>-<Company>.pdf if camel_case is True.
+
+    Note that spaces contained in name will be replace by "_"
+
+    Example
+    -------
+    No space in name:
+    >>> from cliriculum.utils import auto_filename
+    >>> auto_filename(name="Cliriculum", job_title="Resume Maker", "company"="No Company")
+        'cliriculum-resume_maker-company'
+
+
+    Space in name:
+    >>> auto_filename(name="Cliriculum Tool", job_title="Resume Maker", "company"="No Company")
+        'cliriculum_tool-resume_maker-company'
+
+    Camel case in name:
+    >>> auto_filename(name="Cliriculum Tool", job_title="Resume Maker", "company"="No Company", camel_case=True)
+        'Cliriculum_Tool-Resume-Maker-Company'
+    """
+
+    return (
+        _replace_space(name, camel_case=camel_case)
+        + "-"
+        + _case("resume", camel_case=camel_case)
+        + "-"
+        + _replace_space(job_title, camel_case=camel_case)
+        + "-"
+        + _replace_space(company, camel_case=camel_case)
+        + ".pdf"
+    )
