@@ -86,6 +86,7 @@ class ResumeHTML:
     main: MainHTML
     sidebar: SideBarHTML
     """
+
     def __init__(
         self,
         sidebar: SideBarHTML,

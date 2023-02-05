@@ -28,7 +28,7 @@ def test_chdir(fixtures_path):
 
 
 def test_chromium_print():
-    chromium_print("example/")
+    chromium_print("example/", virtual_time_budget=30000)
     # check if pdf exists
     filep = "example/output.pdf"
     assert os.path.exists(filep), "file: {filep} does not exist"

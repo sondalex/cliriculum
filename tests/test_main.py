@@ -88,5 +88,5 @@ def test_make_resume(tmp_path, fixtures_path):
         overwrite=True,
         stylesheet=None,
         job_metadata=j,
-        pdf_auto=True
+        pdf_auto=True,
     )

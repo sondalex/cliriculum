@@ -66,10 +66,10 @@ def make_resume(
     copy_resources(directory)
     if output is not None and pdf_auto is False:
         chromium_print(directory=directory, filename=output)
-    elif pdf_auto is True:
+    elif pdf_auto is True and job_metadata is not None:
         job_meta_dict = load_json(job_metadata)
         jobmeta = Job(**job_meta_dict)
-        
+
         contact = resume.resume.sidebar._contact
         filename = auto_filename(
             name=contact.name,
@@ -78,6 +78,8 @@ def make_resume(
             camel_case=False,
         )
         chromium_print(directory=directory, filename=filename)
+    elif pdf_auto is True and job_metadata is None:
+        raise ValueError("If `pdf_auto` is set to True job metadata must be set. ")
 
 
 def cli() -> argparse.ArgumentParser:
@@ -192,6 +194,7 @@ def main():
         location=args.location,
         output=args.output,
         job_metadata=args.job_metadata,
+        pdf_auto=bool(args.job_metadata),
     )
 
 

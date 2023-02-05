@@ -3,10 +3,12 @@ function styleContact() {
     var contact = document.getElementById("contact");
     // Override padding-top of contact box
     if (profile) {
-        var contact = document.getElementById("contact")
         // margintop = getComputedStyle(document.body).getPropertyValue("--pagedjs-margin-top") // a string
-        contact.style.paddingTop = "calc(var(--pagedjs-margin-top) / 2)"
-    };
+        contact.style.setProperty("padding-top", "calc(var(--pagedjs-margin-top) / 2)");
+    } else {
+      var p_1 = contact.querySelector("p");  // traverse tree subset
+      p_1.style.setProperty('margin-top', '0');
+    }
 };
 
 class StyleContact extends Paged.Handler {
