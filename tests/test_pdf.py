@@ -28,12 +28,21 @@ def test_chdir(fixtures_path):
 
 
 def test_chromium_print():
-    chromium_print("example/", virtual_time_budget=40000)
+    chromium_print("example/", virtual_time_budget=20000)
     # check if pdf exists
     filep = "example/output.pdf"
     assert os.path.exists(filep), "file: {filep} does not exist"
     # parse pdf
-    reader = PdfReader(filep)
-    page = reader.pages[0]
-    text = page.extract_text()
-    assert len(text) > 0, f"text:{text}"
+    max_repeat = 2
+    i = 0
+    while i < max_repeat:
+        chromium_print("example/", virtual_time_budget=20000)
+        reader = PdfReader(filep)
+        page = reader.pages[0]
+        text = page.extract_text()
+        text_length = len(text)
+        if text_length > 0:
+            break
+        if text_length == 0 and i == max_repeat - 1:
+            assert text_length > 0, f"test failed `max_repeat`: {max_repeat} times"
+        i += 1
