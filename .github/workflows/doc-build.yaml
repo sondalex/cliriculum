@@ -22,6 +22,8 @@ jobs:
         uses: actions/setup-python@v4
         with:
           python-version: '3.10'
+      - name: Install system deps
+        run: sudo apt install poppler-utils -y
       - name: Install deps
         run: |
           python -m pip install --upgrade pip
