@@ -1,12 +1,22 @@
-# V0.1.6
+## V0.2.0
+
+* Updated documentation and fixed some of doc build warnings
+* `cliriculum.resume.MainHTML` dates parameter is now optional as well as `cliriculum.resume.Resume` same parameter.
+* Breaking change: `cliriculum.resume.Resume` parameters order changed. Passed from `..., dates, contact` to `..., contact, dates`. 
+Therefore, users who relied on setting parameters implicitly e.g 
+`Resume("sidebar.md", "main.md", "dates.json", "contact.json")` will have their code break with the update. 
+* New test for `cliriculum.utils` module
+* User Guide
+
+## V0.1.6
 
 * Added job metadata feature. cli new argument: `--job-metadata` which points to JSON file with job metadata. This metadata, if provided, is used for naming PDF automatically
 * Added tests for `cliriculum.deserializers` and fixed bad management of null values https://github.com/sondalex/cliriculum/issues/36.
 * Fixed regression which constrained to use a profile picture in resume (related to previous point)
 
-# V0.1.5.1
+## V0.1.5.1
 
-* Fixed https://github.com/sondalex/cliriculum/issues/16 . I.e support for Python > 3.9
+* Fixed https://github.com/sondalex/cliriculum/issues/16 . I.e. support for Python > 3.9
 
 ## V0.1.5
 

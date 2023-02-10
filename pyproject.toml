@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "cliriculum"
 description = "A python cli tool to rapidly create an html or PDF resume"
 readme = "README.md"
-version = "0.1.6"
+version = "0.2.0"
 license = {file = 'LICENSE.md'}
 dependencies = [
     "mistletoe>=1.0.1"
@@ -27,7 +27,9 @@ doc = [
     "myst-parser>=0.18.1",
     "sphinx>=5.3.0",
     "sphinx-autoapi>=2.0.1",
-    "furo>=2022.12.7"
+    "furo>=2022.12.7",
+    "myst-nb>=0.17.1",
+    "pdf2image"
 ]
 
 [project.scripts]

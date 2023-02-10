@@ -62,12 +62,15 @@ class SideBarHTML:
 
 
 class MainHTML:
-    def __init__(self, path, dates, location: Union[str, None] = None):
+    def __init__(
+        self, path, dates: Union[str, None] = None, location: Union[str, None] = None
+    ):
         self.parsed = ParseMd(path)
-        dates_d = load_json(dates)
-        dates_o = Dates(dates_d)
+        if dates is not None:
+            dates_d = load_json(dates)
+            dates_o = Dates(dates_d)
+            self.parsed.add_dates(dates_o)
 
-        self.parsed.add_dates(dates_o)
         if location is not None:
             location_d = load_json(location)
             location_o = Locations(location_d)
@@ -206,8 +209,8 @@ class Resume:
         self,
         sidebar_md: str,
         main_md: str,
-        dates: str,
         contact: str,
+        dates: Union[str, None] = None,
         location: Union[str, None] = None,
     ) -> str:
         sidebar = SideBarHTML(path=sidebar_md, contact=contact, rsrc_dst=self.rsrc_dst)

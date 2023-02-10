@@ -4,7 +4,7 @@ import sys
 from pathlib import Path
 from typing import Union
 from cliriculum.resume import Resume
-from cliriculum.utils import copy_resources, auto_filename
+from cliriculum.utils import copy_resources, auto_filename, _check_dir
 from cliriculum.pdf import chromium_print
 from cliriculum.deserializers import Job
 from cliriculum.loaders import load_json
@@ -42,13 +42,7 @@ def make_resume(
     job_metadata: Union[str, None]
         JSON file location to job metadata, by default False.
     """
-    if os.path.isdir(directory):
-        os.makedirs(directory, exist_ok=overwrite)
-
-    elif os.path.isfile(directory) is False:
-        os.mkdir(directory)
-    else:
-        raise ValueError("The specified file is not a directory and exists")
+    _check_dir(directory=directory, overwrite=overwrite)
     resume = Resume(rsrc_dst=directory, stylesheet=stylesheet)
     html = resume(
         sidebar_md=sidebar_md,

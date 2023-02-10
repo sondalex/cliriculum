@@ -32,7 +32,15 @@ import os
 import sys
 
 sys.path.insert(0, os.path.abspath('../..'))
-extensions = ['sphinx.ext.autodoc', 'sphinx.ext.napoleon', 'myst_parser', "sphinx.ext.autosummary", 'autoapi.extension']
+extensions = [
+        'sphinx.ext.autodoc',
+        'sphinx.ext.napoleon',
+        # 'myst_parser',
+        "sphinx.ext.autosummary",
+        'autoapi.extension',
+        "myst_nb",
+        "sphinx.ext.autosectionlabel"
+        ]
 
 html_theme = "furo"
 autosummary_generate = True
@@ -42,3 +50,7 @@ autoapi_dirs = ['../../cliriculum']
 autoapi_add_toctree_entry = False
 autoapi_ignore = ['*parsers.py']
 autoapi_keep_files = False
+autosectionlabel_prefix_document = True
+
+nb_execution_mode = "force"  # https://myst-nb.readthedocs.io/en/latest/configuration.html
+# https://myst-nb.readthedocs.io/en/latest/computation/execute.html
