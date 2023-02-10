@@ -5,11 +5,21 @@ from importlib import resources
 import os
 
 
+def _check_dir(directory, overwrite):
+    if os.path.isdir(directory):
+        os.makedirs(directory, exist_ok=overwrite)
+    elif os.path.isfile(directory) is False:
+        os.mkdir(directory)
+    else:
+        raise ValueError("The specified file is not a directory and exists")
+
+
 def get_resources_nodes(
     root, tree, resrcs: List, skip_dirs: Iterable = {"__pycache__"}
 ) -> List[PosixPath]:
     """
     Get resources nodes recursively.
+
     Parameters
     ----------
     root: root Traversable
@@ -25,6 +35,7 @@ def get_resources_nodes(
     skip_dirs: Iterable
         Directories in which resources should not be fetched.
         Default = {'__pycache__'}
+
     Returns
     -------
     List[PosixPath]
@@ -34,6 +45,7 @@ def get_resources_nodes(
     --------
     >>> a = resources.files("cliriculum.data")
     >>> get_resources_nodes(a.parent.parent, a)
+
     """
     package = ".".join(tree.relative_to(root).parts)  # init
     for node in tree.iterdir():
@@ -54,10 +66,18 @@ def copy_resources(directory: str, resource_root: str = "cliriculum.data"):
 
     Parameters
     ----------
-    directory: str Where to store the directory
-    resource_root: str The resource_root directory specified in module type
+    directory: str Where to store the directory.
+        The directory should exist.
+    resource_root: str
+        The resource_root directory specified in module type
     notation, default "cliriculum.data"
     """
+    if os.path.isdir(directory) is False and os.path.isfile(directory) is False:
+        raise FileNotFoundError(
+            f"Directory: '{directory}' does not exist, it should be created first."
+        )
+    elif os.path.isdir(directory) is False and os.path.isfile(directory) is True:
+        raise FileExistsError("File exists: '{directory}'")
     pkgname = resource_root.split(".")[0]
 
     tree = resources.files(package=resource_root)  # requires python >=3.9
@@ -74,7 +94,6 @@ def copy_resources(directory: str, resource_root: str = "cliriculum.data"):
         # create directory
         if target.parent.exists() is False and target.parent != target_dir:
             os.makedirs(target.parent)
-
         copy2(src=source, dst=target)
         # assert False == True
 
@@ -115,26 +134,30 @@ def auto_filename(name: str, job_title: str, company: str, camel_case: bool) -> 
     """
     Create filename string under the form:
 
-    <name>-resume-<job title>-<company>.pdf if camel_case is False.
-    Or <Name>-Resume-<Job title>-<Company>.pdf if camel_case is True.
+    `<name>-resume-<job title>-<company>.pdf` if camel_case is False.
+    Or `<Name>-Resume-<Job title>-<Company>.pdf` if camel_case is True.
 
     Note that spaces contained in name will be replace by "_"
 
     Example
     -------
     No space in name:
+
     >>> from cliriculum.utils import auto_filename
     >>> auto_filename(name="Cliriculum", job_title="Resume Maker", "company"="No Company")
         'cliriculum-resume_maker-company'
 
 
     Space in name:
+
     >>> auto_filename(name="Cliriculum Tool", job_title="Resume Maker", "company"="No Company")
         'cliriculum_tool-resume_maker-company'
 
     Camel case in name:
+
     >>> auto_filename(name="Cliriculum Tool", job_title="Resume Maker", "company"="No Company", camel_case=True)
         'Cliriculum_Tool-Resume-Maker-Company'
+
     """
 
     return (
