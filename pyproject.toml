@@ -6,7 +6,7 @@ build-backend = "setuptools.build_meta"
 name = "cliriculum"
 description = "A python cli tool to rapidly create an html or PDF resume"
 readme = "README.md"
-version = "0.2.0"
+version = "0.2.1"
 license = {file = 'LICENSE.md'}
 dependencies = [
     "mistletoe>=1.0.1"
@@ -15,7 +15,7 @@ requires-python = '>=3.9'
 
 [project.urls]
 homepage="https://github.com/sondalex/cliriculum"
-documentation="https://pandas.pydata.org/docs/"
+documentation="https://sondalex.github.io/cliriculum"
 
 [project.optional-dependencies]
 test = [

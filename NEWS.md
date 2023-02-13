@@ -1,3 +1,7 @@
+## V0.2.1
+
+* Fixed url in `pyproject.toml`'s field `documentation`. The URL was set to wrong value for testing purposes and accidentally committed. 
+
 ## V0.2.0
 
 * Updated documentation and fixed some of doc build warnings
