@@ -93,7 +93,7 @@ Python solution:
 ```console
 # suppose you saved resume in resume directory (`cliriculum --destination=resume`)
 cd resume/
-python -m http.server
+python -m http.server --bind 127.0.0.1
 ```
 
 Or set `--pdf-output` flag.

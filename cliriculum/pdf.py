@@ -117,7 +117,7 @@ def chromium_print(
     if ch_deps is False:
         raise DependencyError
     with ChDir(directory):
-        httpd = HTTPServer(("", port), SimpleHTTPRequestHandler)
+        httpd = HTTPServer(("127.0.0.1", port), SimpleHTTPRequestHandler)
         thread_server = Thread(target=httpd.serve_forever)
         thread_server.start()
         PRINT = [f"--print-to-pdf={filename}"]
