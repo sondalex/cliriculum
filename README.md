@@ -60,12 +60,6 @@ loading CSS and js scripts from `file:///*`.
 An error of the form `Cross-Origin Request blocked` is raised
 for each file loading attempt.
 
-A well-used turnaround is to use cdns or/and use
-inline css. See sphinx documentation for example.
-
-Currently, I chose not to use this method.
-
-
 ## Rendering
 
 * Export to HTML
