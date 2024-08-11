@@ -39,7 +39,7 @@ jobs:
           path: './docs/build/html' 
   deploy:
     runs-on: ubuntu-latest
-    needs: builddoc
+    needs: [builddoc, run_style_check]
     if: github.event_name == 'push'
     steps:
       - name: Setup Pages
