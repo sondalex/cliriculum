@@ -1,11 +1,13 @@
+import os
 import re
+from collections import OrderedDict
+from typing import Any, List, Optional, Tuple, Type, Union
+
 from mistletoe.block_token import Heading
 from mistletoe.span_token import RawText
-from cliriculum.deserializers import Dates, Contact, Locations
-from typing import List, Union, Type, Any, Tuple
-import os
+
+from cliriculum.deserializers import Contact, Dates, Locations
 from cliriculum.parsers import Document
-from collections import OrderedDict
 
 
 class URLEntry:
@@ -19,12 +21,13 @@ class URLEntry:
 
 
 class LogoEntry:
-    def __init__(self, src, title, classes, width="18", height="18"):
+    def __init__(self, src, title, classes, width: str = "18", height: str = "18"):
         """
         A node intented to be added into the abstract
         syntax tree.
-        The node contains the following attributes:
 
+        Attributes
+        ----------
         src:
         title:
         width:
@@ -32,13 +35,13 @@ class LogoEntry:
 
         Parameters
         ----------
-        src : _type_
+        src:
             Path to logo
-        title : _type_
+        title:
             A description
-        width : str, optional
+        width: Optional[str]
             Size of width of image, by default "18"
-        height : str, optional
+        height: Optional[str]
             Size of height of image, by default "18"
         """
         self.src = src
@@ -53,8 +56,6 @@ class LogoEntry:
 
 class PeriodEntry(LogoEntry):
     def __init__(self, idx, start, end, logo, width, height, classes):
-        # Bridge from cliriculum.deserializers.Period instance attributes
-        # to LogoEntry
         startfmt = start.strftime("%B %Y")
         if end is not None:
             endfmt = end.strftime("%B %Y")
@@ -68,8 +69,6 @@ class PeriodEntry(LogoEntry):
 
 class LocationEntry(LogoEntry):
     def __init__(self, idx, classes, location):
-        # Bridge from cliriculum.deserializers.Location instance attributes
-        # to LogoEntry
         title = location
         super().__init__(
             src=None, title=title, classes=classes, height=None, width=None
@@ -85,20 +84,18 @@ class ImageEntry:
 
 
 class TextEntry:
-    def __init__(self, text, emphasis: Union[str, None] = None):
-        """_summary_
-
+    def __init__(self, text: str, emphasis: Optional[str] = None):
+        """
         Parameters
         ----------
-        text : _type_
-            _description_
+        text : str
         emphasis : str
-            s
+            One of ["bold", "italic", None]
         """
         self.text = text
-        _ = ["bold", "italic", None]
-        if emphasis not in _:
-            raise ValueError("`emphasis` accepts values : {}".format(_))
+        valid = ["bold", "italic", None]
+        if emphasis not in valid:
+            raise ValueError("`emphasis` accepts values : {}".format(valid))
         self.emphasis = emphasis
 
 
@@ -136,13 +133,12 @@ class ParseMd:
 
     Attributes
     ----------
-    doc The tree representation of the document. Each public methods calls
-    modifies this attribute
+    doc:
+        The tree representation of the document. Each public methods calls
+        modifies this attribute
     top: Union[bool, None]
-        Set on `self.add_contact` calls.
-        If multiple calls, the top correspond
-        to the last position of the last
-        added Contact node.
+        Set on `self.add_contact` calls. If multiple calls, the top correspond
+        to the last position of the last added Contact node.
         Default None.
     """
 
@@ -154,13 +150,13 @@ class ParseMd:
     """
 
     def __init__(self, path: str):
-        """_summary_
+        """
 
         Parameters
         ----------
         path : str
             Path to markdown file.
-            The file will be parsed by [mistletoe](https://github.com/miyuchina/mistletoe)
+            The file will be parsed by `mistletoe <https://github.com/miyuchina/mistletoe>`_
             And its tree representation stored in `self.doc`.
         """
         with open(path, mode="r") as f:
@@ -174,12 +170,11 @@ class ParseMd:
             return True
 
     def _headings_with_id_idx(self, doc: Document) -> OrderedDict:
-        """_summary_
+        """
 
         Parameters
         ----------
         doc : Document
-            _description_
 
         Returns
         -------
@@ -196,19 +191,18 @@ class ParseMd:
                 if (leaf.level == 2) and (outer_and_inner_span is not None):
                     raw_leaf = leaf.children[0]
                     _, indice_span = outer_and_inner_span
-                    indice = raw_leaf.content[indice_span[0]: indice_span[1]]
+                    indice = raw_leaf.content[indice_span[0] : indice_span[1]]
                     heading_index[i] = indice
         return heading_index
 
     def _get_heading_id_spans(
         self, node
     ) -> Union[Tuple[Tuple[int, int], Tuple[int, int]], None]:
-        """_summary_
+        """
 
         Parameters
         ----------
-        node : _type_
-            _description_
+        node:
 
         Returns
         -------
@@ -217,13 +211,13 @@ class ParseMd:
 
         Example
         -------
+
         >>> self._get_heading_id_spans(node)
         >>> ((7, 15), (9, 14))
 
         Raises
         ------
         ValueError
-            _description_
         """
         if self._is_heading(node):
             raw_leaf = node.children[0]
@@ -242,7 +236,6 @@ class ParseMd:
                 raise ValueError(self._error)
             match_obj = self.classes_pattern.search(raw_leaf.content)
             if match_obj is not None:
-
                 return match_obj.regs
             else:
                 return None, None
@@ -271,13 +264,13 @@ class ParseMd:
         ----------
         nodes: Union[Locations, Dates]
             Object derived from collections.UserDict class.
-        new_node_class: ...
+        new_node_class: Type[Any]
             A Class callable.
             On node match, the attributes of the matched node(s) from `nodes`
             are passed to new_node_class instanciation.
 
-        Important Note
-        --------------
+        Warning
+        -------
         If you wish to render the parsed document, you have to make sure all `new_node_class` are registered
             in the renderer.
         """
@@ -295,8 +288,8 @@ class ParseMd:
                 # extract id
                 outer_span, inner_span = self._get_heading_id_spans(heading)
                 raw_leaf = heading.children[0]
-                indice = raw_leaf.content[inner_span[0]: inner_span[1]]
-                to_replace = raw_leaf.content[outer_span[0]: outer_span[1]]
+                indice = raw_leaf.content[inner_span[0] : inner_span[1]]
+                to_replace = raw_leaf.content[outer_span[0] : outer_span[1]]
                 self.doc.children[pos].children[0].content = raw_leaf.content.replace(
                     to_replace, ""
                 ).rstrip()  # replace the {#id} with empty string
@@ -320,14 +313,14 @@ class ParseMd:
             # Correct registered indices for addition of node
             h_index_items = list(self.heading_index.items())
             self.heading_index = OrderedDict(
-                [(key, value) for key, value in h_index_items[0: i + 1]] +
-                [(key + 1, value) for key, value in h_index_items[i + 1 :]]
+                [(key, value) for key, value in h_index_items[0 : i + 1]]
+                + [(key + 1, value) for key, value in h_index_items[i + 1 :]]
             )
 
         return self
 
     def add_dates(self, dates: Dates):
-        """_summary_
+        """
         Adds dates as a LogoEntry to the doc representation
 
 
@@ -342,8 +335,8 @@ class ParseMd:
             An extended document with date added for Dates.periods object
             who share a level two ATX heading common id.
 
-        Examples
-        -------
+        Example
+        --------
 
         >>> from cliriculum.renderers import Renderer
         >>> from cliriculum.deserializers import Dates
@@ -374,9 +367,9 @@ class ParseMd:
         """
         Adds class to heading such as:
 
-        ```
-        # Heading {class="<i class="fa-solid fa-graduation-cap"}
-        ```
+        .. code-block:: markdown
+
+           Heading {class="<i class="fa-solid fa-graduation-cap"}
 
         """
         classes = self._search_for_classes(self.doc)
@@ -384,29 +377,30 @@ class ParseMd:
             outer_span, inner_span = v
             heading = self.doc.children[i]
             raw_leaf = heading.children[0]
-            class_ = raw_leaf.content[inner_span[0]: inner_span[1]]
-            to_replace = raw_leaf.content[outer_span[0]: outer_span[1]]
+            class_ = raw_leaf.content[inner_span[0] : inner_span[1]]
+            to_replace = raw_leaf.content[outer_span[0] : outer_span[1]]
             new_text = raw_leaf.content.replace(to_replace, "").rstrip()
             heading.children[0].content = new_text
             print(f"NEW_TEXT {new_text}")
             print(self.doc.children[i].children)
-            self.doc.children[i].children[0] = Span(heading.children[0]) # not necessary
+            self.doc.children[i].children[0] = Span(
+                heading.children[0]
+            )  # not necessary
             self.doc.children[i].children.insert(0, Class(class_))
 
         return self
 
     def add_contact(self, contact: Contact, top: bool = True):
-        """_summary_
+        """
 
         Parameters
         ----------
         contact : Contact
-            _description_
         top : bool, optional
-            _description_, by default True
+            Whether to add to the top, by default True
 
-        Examples
-        --------
+        Example
+        -------
 
         >>> from cliriculum.renderers import Renderer
         >>> from cliriculum.deserializers import Contact
@@ -483,7 +477,6 @@ class ParseMd:
         else:
             self.doc.children.insert(0, contact_block)
 
-            # increment all keys by 1
             self.heading_index = {
                 key + 1: value for key, value in self.heading_index.items()
             }

@@ -6,8 +6,6 @@ jupytext:
     format_version: 0.13
     jupytext_version: 1.10.3
 kernelspec:
-  display_name: Python 3
-  language: python
   name: python3
 ---
 
@@ -48,9 +46,12 @@ The contact file would look like:
 ```JSON
 {   "name":"cliriculum",
     "profession": "cli",
-    "website": {"url":"https://www.github.com/sondalex/cliriculum", "text":"github.com/sondalex/cliriculum", "classes":"fa-brands fa-github"}
+    "website": {
+        "url": "https://www.github.com/sondalex/cliriculum",
+        "text":"github.com/sondalex/cliriculum",
+        "classes":"fa-brands fa-github"
+    }
 }
-
 ```
 
 The file for the other section of sidebar would look like:
@@ -76,9 +77,11 @@ If you wish more customization you can use `css`.
 ```{code-cell} ipython3
 :tags: [remove-cell]
 from tempfile import TemporaryDirectory
+import os
 from pathlib import Path
 tmpdir = TemporaryDirectory()
 tmpdirpath = Path(tmpdir.name)
+
 
 def write(dir, filename, string):
     with open(dir/ filename, "w") as f:
@@ -114,8 +117,8 @@ sidebar_md = write(dir=tmpdirpath, filename="side.md", string=side_str)
 contact = write(dir=tmpdirpath, filename="contact.json", string=contact_str)
 
 # create resume directory
-import os
-os.mkdir("resume")
+if not os.path.exists("resume"):
+    os.mkdir("resume")
 ```
 
 To generate the HTML representation of the resume:
@@ -156,16 +159,14 @@ with open("resume/index.html", "w") as f:
   f.write(html)
 ```
 
-If you open a terminal and run
+If you open a terminal and run:
 
 ```bash
 cd resume/
 python -m http.server 
 ```
 
-and open the link with your browser (preferably Chromium based i.e Chromium, Chrome, Brave, ...)
-
-you'll see how your resume looks like.
+open the link with your browser (preferably Chromium based i.e. Chromium, Chrome, Brave, ...) and you'll see how your resume looks like.
 
 You can then convert the resume to PDF in a web browser (generally with `ctrl+p` or `cmd+p`)
 
@@ -176,10 +177,8 @@ To generate the PDF on the fly (for instance to automate the procedure) {py:mod}
 
 ```{code-cell} ipython3
 from cliriculum.pdf import chromium_print
-chromium_print(directory="resume", filename="output.pdf")
+chromium_print(directory="resume", filename="output.pdf", verbose=True)
 ```
-
-<!--A little image of the pdf -->
 
 ### How it looks?
 
@@ -187,6 +186,8 @@ chromium_print(directory="resume", filename="output.pdf")
 :tags: [remove-input]
 from IPython.display import display
 from pdf2image import convert_from_path
+
+
 images = convert_from_path("resume/output.pdf")
 display(images[0])
 ```

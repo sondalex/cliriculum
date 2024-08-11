@@ -1,7 +1,7 @@
-from cliriculum.renderers import Renderer
-from cliriculum.markdown import ParseMd, LogoEntry
-from cliriculum.deserializers import Dates, Contact
+from cliriculum.deserializers import Contact, Dates
 from cliriculum.loaders import load_json
+from cliriculum.markdown import ParseMd
+from cliriculum.renderers import Renderer
 
 
 def test_parse_md(fixtures_path):
@@ -20,8 +20,7 @@ def test_renderer(fixtures_path):
     No result control
     Parameters
     ----------
-    fixtures_path : _type_
-        _description_
+    fixtures_path
     """
     md_path = str(fixtures_path / "main.md")
     parsed = ParseMd(md_path)
@@ -29,9 +28,9 @@ def test_renderer(fixtures_path):
     dates = Dates(dates_d)
     doc = parsed.add_dates(dates=dates).doc
     with Renderer() as r:
-        html = r.render(doc)
+        _ = r.render(doc)
     contact_d = load_json(str(fixtures_path / "contact.json"))
     contact = Contact(**contact_d)
     doc = parsed.add_contact(contact=contact).doc
     with Renderer() as r:
-        html = r.render(doc)
+        _ = r.render(doc)

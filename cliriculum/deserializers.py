@@ -1,20 +1,17 @@
-from datetime import date
-from typing import Union, List, Dict
 from collections import UserDict
+from datetime import date
+from typing import Dict, List, Optional
 
 
 class Dates(UserDict):
     """
     Deserializer of date metadata
 
-    Examples
-    --------
+    Example
+    -------
     >>> d = load_json("dates.json")
     >>> dates = Dates(d)
 
-    Attributes
-    ----------
-    periods: List[Periods]
     """
 
     def __setitem__(self, key, item):
@@ -33,18 +30,19 @@ class Period:
     logo: Union[str, None]
     width: Union[str, None]
     height: Union[str, None]
-    classes: Union[str, None] classes has priority over logo in :py:mod:`cliriculum.renderers`
+    classes: Union[str, None]
+        classes has priority over logo in :py:mod:`cliriculum.renderers`
     """
 
     def __init__(
         self,
         id: str,
         start: date,
-        end: Union[date, None] = None,
-        logo: Union[str, None] = None,
-        width: Union[str, None] = None,
-        height: Union[str, None] = None,
-        classes: Union[str, None] = None,
+        end: Optional[date] = None,
+        logo: Optional[str] = None,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
+        classes: Optional[str] = None,
     ):
         """
 
@@ -53,15 +51,15 @@ class Period:
         id : str
         start : str
             The start of the period
-        end : Union[str, None]
+        end : Optional[str]
             The end of the period
-        logo: Union[str, None]
+        logo: Optional[str]
             A path towards a logo
-        width: Union[str, None]
+        width: Optional[str]
             Width of logo
-        height:  Union[str, None]
+        height:  Optional[str]
             Height of logo
-        classes: Union[str, None]
+        classes: Optional[str]
             css classnames
             `classes="class1 class2"`
         """
@@ -100,12 +98,12 @@ class URL:
 
     def __init__(
         self,
-        url: Union[str, None],
-        logo: Union[str, None] = None,
-        classes: Union[str, None] = None,
-        text: Union[str, None] = None,
-        width: Union[str, None] = None,
-        height: Union[str, None] = None,
+        url: Optional[str],
+        logo: Optional[str] = None,
+        classes: Optional[str] = None,
+        text: Optional[str] = None,
+        width: Optional[str] = None,
+        height: Optional[str] = None,
     ):
         self.logo = logo
         self.url = url
@@ -154,26 +152,26 @@ class Profile(URL):
     """
     Profile fields.
 
-    Attributes:
-    -----------
+    Attributes
+    ----------
     ...: Attributes from: :py:class:`URL`
     """
 
     def __init__(
         self,
-        picture: Union[str, None],
-        width: Union[str, None] = "200px",
-        height: Union[str, None] = "200px",
+        picture: Optional[str],
+        width: Optional[str] = "200px",
+        height: Optional[str] = "200px",
     ):
         """
         Parameters
         ----------
-        picture : Union[str, None], optional
+        picture : Optional[str]
             Picture path, by default None
             passed as super(URL).__init__(logo=picture)
-        width : Union[str, None], optional
+        width : Optional[str]
             Width height, by default "200px"
-        height : Union[str, None], optional
+        height : Optional[str]
             Picture height, by default "200px"
         """
         super().__init__(url=None, width=width, height=height, logo=picture)
@@ -195,31 +193,34 @@ class Contact:
 
     def __init__(
         self,
-        name,
-        profession: Union[str, None] = None,
-        email: Union[str, None] = None,
-        website: Union[str, None] = None,
-        socials: Union[str, None] = None,
-        number: Union[str, None] = None,
-        profile: Union[str, None] = None,
+        name: str,
+        profession: Optional[str] = None,
+        email: Optional[str] = None,
+        website: Optional[str] = None,
+        socials: Optional[str] = None,
+        number: Optional[str] = None,
+        profile: Optional[str] = None,
     ):
         """
-        name:
+        Parameters
+        ----------
+        name: str
             Required
             Single string (first name last name)
-        profession: Union[str, None]
+        profession: Optional[str]
             Defaults to None.
-        email: Union[str, None]
+        email: Optional[str]
             Defaults to None.
-        website: Union[str, None]
+        website: Optional[str]
             Defaults to None.
-        socials: Union[str, None]
+        socials: Optional[str]
             Defaults to None.
-        number: Union[str, None]
+        number: Optional[str]
             Defaults to None
 
-        Examples
-        --------
+        Example
+        -------
+
         >>> from cliriculum.parsers import load_json
         >>> c = load_json("contact.json")
         >>> Contact(**c)
@@ -251,7 +252,7 @@ class Contact:
 
 
 class Location:
-    def __init__(self, id: str, location: str, classes: Union[str, None] = None):
+    def __init__(self, id: str, location: str, classes: Optional[str] = None):
         """
 
         Parameters
@@ -259,9 +260,7 @@ class Location:
         id : str
             An id to match with content
         location : str
-            _description_
-        classes : Union[str, None], optional
-            _description_, by default None
+        classes : Optional[str]
         """
         self.classes = classes
         self.location = location
@@ -270,13 +269,9 @@ class Location:
 
 class Locations(UserDict):
     """
-
-    Parameters
-    ----------
-    UserDict : _type_
-
     Example
     -------
+
     >>> from cliriculum.parsers import load_json
     >>> from cliriculum.deserializers import Locations
     >>> l = load_json("location.json")
@@ -289,8 +284,18 @@ class Locations(UserDict):
 
 
 class Job:
-    def __init__(
-        self, title: Union[str, None] = None, company: Union[str, None] = None
-    ):
+    def __init__(self, title: Optional[str] = None, company: Optional[str] = None):
+        """
+        Attributes
+        ----------
+        title: Union[str, None]
+        company: Union[str, None]
+
+        Parameters
+        ----------
+        title: Optional[str]
+        company: Optional[str]
+
+        """
         self.title = title
         self.company = company

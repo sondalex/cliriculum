@@ -1,9 +1,11 @@
-from cliriculum.pdf import chromium_print, ChDir
-from http.server import SimpleHTTPRequestHandler, HTTPServer
 import os
-import requests
+from http.server import HTTPServer, SimpleHTTPRequestHandler
 from threading import Thread
+
+import requests
 from pypdf import PdfReader
+
+from cliriculum.pdf import ChDir, chromium_print
 
 
 def test_chdir(fixtures_path):
@@ -28,7 +30,7 @@ def test_chdir(fixtures_path):
 
 
 def test_chromium_print():
-    chromium_print("example/", virtual_time_budget=20000)
+    chromium_print("example/")
     # check if pdf exists
     filep = "example/output.pdf"
     assert os.path.exists(filep), "file: {filep} does not exist"
@@ -36,7 +38,7 @@ def test_chromium_print():
     max_repeat = 2
     i = 0
     while i < max_repeat:
-        chromium_print("example/", virtual_time_budget=20000)
+        chromium_print("example/")
         reader = PdfReader(filep)
         page = reader.pages[0]
         text = page.extract_text()

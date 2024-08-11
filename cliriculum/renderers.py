@@ -1,18 +1,19 @@
+from textwrap import dedent
+
 from mistletoe.html_renderer import HTMLRenderer
+
 from cliriculum.markdown import (
-    LogoEntry,
-    TextEntry,
-    URLEntry,
+    Class,
     ContactBlock,
-    SocialBlock,
     DescriptionBlock,
     ImageEntry,
     LocationEntry,
     PeriodEntry,
-    Class,
-    Span
+    SocialBlock,
+    Span,
+    TextEntry,
+    URLEntry,
 )
-from textwrap import dedent
 
 
 class Renderer(HTMLRenderer):
@@ -27,7 +28,7 @@ class Renderer(HTMLRenderer):
             LocationEntry,
             PeriodEntry,
             Class,
-            Span
+            Span,
         )
 
     @staticmethod
@@ -96,21 +97,15 @@ class Renderer(HTMLRenderer):
         if token.emphasis == "bold":
             html = """
             <strong>{text}</strong>
-            """.format(
-                text=token.text
-            )
+            """.format(text=token.text)
         elif token.emphasis == "italic":
             html = """
             <i>{text}</i>
-            """.format(
-                text=token.text
-            )
+            """.format(text=token.text)
         else:
             html = """
             <p>{text}</p>
-            """.format(
-                text=token.text
-            )
+            """.format(text=token.text)
         return pre + dedent(html) + post
 
     def render_class(self, token):
@@ -178,44 +173,52 @@ class Renderer(HTMLRenderer):
 
 
 class MainRenderer(Renderer):
-    def render_document(self, token):
-        """
-        Renders document to html representation in `<main>...</main>` tags
-        Parameters
-        ----------
-        token : _type_
-            _description_
-
-        Returns
-        -------
-        _type_
-            _description_
-        """
-        template = """
+    html_template = """
         <main id = "main" class="main">
         <div class="content">
         {main}
         </div>
         </main>
         """
-        return dedent(template.format(main=self.render_inner(token)))
+
+    def render_document(self, token):
+        """
+        Renders document to html representation in `<main>...</main>` tags
+
+        Parameters
+        ----------
+        token:
+
+        Returns
+        -------
+        str
+            An HTML snippet using template :py:attr:`MainRenderer.html_template`
+        """
+        return dedent(self.html_template.format(main=self.render_inner(token)))
 
 
 class SideBarRenderer(Renderer):
-    def render_document(self, token):
+    """
+    Attributes
+    ----------
+    html_template: str
+    """
+
+    html_template = '<aside id="aside" class="aside">\n{sidebar}\n</aside>'
+
+    def render_document(self, token) -> str:
         """
         Renders document to html representation in `<aside>...</aside>` tags
 
         Parameters
         ----------
-        token : _type_
-            _description_
+        token:
+            A node
 
         Returns
         -------
-        _type_
-            _description_
+        str
+            An HTML snippet using template :py:attr:`SideBarRenderer.html_template`
         """
-        template = '<aside id="aside" class="aside">\n{sidebar}\n</aside>'
 
-        return template.format(sidebar=self.render_inner(token))
+        return self.html_template.format(sidebar=self.render_inner(token))

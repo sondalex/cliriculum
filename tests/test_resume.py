@@ -1,8 +1,9 @@
-from cliriculum.resume import resume, SideBarHTML, MainHTML, ResumeHTML, Resume
-import pytest
 import os
 import warnings
 
+import pytest
+
+from cliriculum.resume import MainHTML, Resume, ResumeHTML, SideBarHTML, resume
 
 ARGS = ["location_path", "location_none"]
 
@@ -14,7 +15,7 @@ class TestResume:
         m = str(fixtures_path / "main.md")
         d = str(fixtures_path / "dates.json")
         c = str(fixtures_path / "contact.json")
-        add_css = str(fixtures_path / "custom.css")
+        _ = str(fixtures_path / "custom.css")
         resume = Resume(rsrc_dst=None, stylesheet=None)
         html = resume(
             sidebar_md=s,
@@ -30,14 +31,14 @@ def test_sidebar_html(fixtures_path):
     s = str(fixtures_path / "sidebar.md")
     c = str(fixtures_path / "contact.json")
 
-    sidebar = SideBarHTML(path=s, contact=c)
+    _ = SideBarHTML(path=s, contact=c)
 
 
 @pytest.mark.parametrize("location", ARGS)
 def test_main_html(location, fixtures_path, request):
     m = str(fixtures_path / "main.md")
     d = str(fixtures_path / "dates.json")
-    main = MainHTML(m, dates=d, location=request.getfixturevalue(location))
+    _ = MainHTML(m, dates=d, location=request.getfixturevalue(location))
 
 
 # This test tests deprecated function (depr from 0.1.6)
@@ -48,10 +49,10 @@ def test_resume(location, tmp_path, fixtures_path, request):
     m = str(fixtures_path / "main.md")
     d = str(fixtures_path / "dates.json")
     c = str(fixtures_path / "contact.json")
-    add_css = str(fixtures_path / "custom.css")
+    _ = str(fixtures_path / "custom.css")
     with warnings.catch_warnings():
         warnings.simplefilter("ignore")
-        html = resume(sidebar_md=s, main_md=m, dates=d, contact=c)
+        _ = resume(sidebar_md=s, main_md=m, dates=d, contact=c)
     with pytest.deprecated_call():
         resume(sidebar_md=s, main_md=m, dates=d, contact=c)
 
