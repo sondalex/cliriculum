@@ -1,4 +1,4 @@
-## V0.2.1
+## V0.2.2
 
 * Updated documentation
 * Breaking change for `cliriculum.pdf.chromium_print`
