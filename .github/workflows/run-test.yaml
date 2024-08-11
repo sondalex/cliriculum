@@ -3,12 +3,27 @@ on:
   push:
     branches:
       - master
-      # - 0.1.x No need for the moment
   pull_request:
     branches:
-      - master  # avoids activation of workflow if pull request on another branch
+      - master
 jobs:
+  run_style_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v3
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.11'
+      - name: Install deps
+        run: |
+          pip install ruff
+      - name: Check style
+        run: | 
+          ruff check
+          ruff format --check
   run_tests:
+    needs: run_style_check
     runs-on: ubuntu-latest
     strategy:
       matrix:
