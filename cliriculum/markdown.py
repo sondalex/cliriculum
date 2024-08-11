@@ -119,6 +119,16 @@ class DescriptionBlock:
         self.children = children
 
 
+class Class:
+    def __init__(self, classes):
+        self.classes = classes
+
+
+class Span:
+    def __init__(self, text: RawText):
+        self.text = text
+
+
 class ParseMd:
     """
     Parse Markdown Document and adds
@@ -137,6 +147,11 @@ class ParseMd:
     """
 
     heading_id_pattern = re.compile(r"\{#([\w-]*[\w-])\}$")
+    classes_pattern = re.compile(r'\{classes=\s{0,}"([^"]*)"\s{0,}\}')
+    _error = """
+    There might be an issue with the current version,
+    could you report it ?
+    """
 
     def __init__(self, path: str):
         """_summary_
@@ -154,7 +169,7 @@ class ParseMd:
         self.top = None
         self.heading_index = OrderedDict()  # maybe should set it to private
 
-    def _isHeading(self, leaf):
+    def _is_heading(self, leaf):
         if isinstance(leaf, Heading):
             return True
 
@@ -181,7 +196,7 @@ class ParseMd:
                 if (leaf.level == 2) and (outer_and_inner_span is not None):
                     raw_leaf = leaf.children[0]
                     _, indice_span = outer_and_inner_span
-                    indice = raw_leaf.content[indice_span[0] : indice_span[1]]
+                    indice = raw_leaf.content[indice_span[0]: indice_span[1]]
                     heading_index[i] = indice
         return heading_index
 
@@ -210,7 +225,7 @@ class ParseMd:
         ValueError
             _description_
         """
-        if self._isHeading(node):
+        if self._is_heading(node):
             raw_leaf = node.children[0]
             match_obj = self.heading_id_pattern.search(raw_leaf.content)
             if match_obj is not None:
@@ -220,27 +235,22 @@ class ParseMd:
         else:
             raise ValueError("Wrong type of node")
 
-    def _has_heading_id(self, node):
-        if self._isHeading(node):
-            raw_leaf = node.children[0]  # select raw content
+    def _heading_class_spans(self, node):
+        if self._is_heading(node):
+            raw_leaf = node.children[0]
             if isinstance(raw_leaf, RawText) is False:
-                error = """
-                There might be an issue with the current version,
-                could you report it ?
-                """
-                raise ValueError(error)
+                raise ValueError(self._error)
+            match_obj = self.classes_pattern.search(raw_leaf.content)
+            if match_obj is not None:
 
-            match_obj = self.heading_id_pattern.search(raw_leaf.content)
-            if match_obj is None:
-                return False
+                return match_obj.regs
             else:
-                return True
-
+                return None, None
         else:
-            raise ValueError("Wrong type of node")
+            raise TypeError("Wrong type of node")
 
     def _add_to_top_paragraph(self, leveltwo_header_idx, new_node):
-        """_summary_
+        """
         Add LogoEntry node just below `leveltwo_header_idx` (Second level with id's node index)
 
         Parameters
@@ -285,8 +295,8 @@ class ParseMd:
                 # extract id
                 outer_span, inner_span = self._get_heading_id_spans(heading)
                 raw_leaf = heading.children[0]
-                indice = raw_leaf.content[inner_span[0] : inner_span[1]]
-                to_replace = raw_leaf.content[outer_span[0] : outer_span[1]]
+                indice = raw_leaf.content[inner_span[0]: inner_span[1]]
+                to_replace = raw_leaf.content[outer_span[0]: outer_span[1]]
                 self.doc.children[pos].children[0].content = raw_leaf.content.replace(
                     to_replace, ""
                 ).rstrip()  # replace the {#id} with empty string
@@ -310,8 +320,8 @@ class ParseMd:
             # Correct registered indices for addition of node
             h_index_items = list(self.heading_index.items())
             self.heading_index = OrderedDict(
-                [(key, value) for key, value in h_index_items[0 : i + 1]]
-                + [(key + 1, value) for key, value in h_index_items[i + 1 :]]
+                [(key, value) for key, value in h_index_items[0: i + 1]] +
+                [(key + 1, value) for key, value in h_index_items[i + 1 :]]
             )
 
         return self
@@ -347,6 +357,42 @@ class ParseMd:
         >>>     html = r.render(doc)
         """
         self.add_node_by_match_idx(nodes=dates, new_node_class=PeriodEntry)
+        return self
+
+    def _search_for_classes(self, doc):
+        classes_location = OrderedDict()
+        for i, leaf in enumerate(doc.children):
+            # issubclass
+            # isinstance
+            if isinstance(leaf, Heading):
+                outer_span, inner_span = self._heading_class_spans(leaf)
+                if (leaf.level == 1) and (outer_span is not None):
+                    classes_location[i] = outer_span, inner_span
+        return classes_location
+
+    def add_class(self):
+        """
+        Adds class to heading such as:
+
+        ```
+        # Heading {class="<i class="fa-solid fa-graduation-cap"}
+        ```
+
+        """
+        classes = self._search_for_classes(self.doc)
+        for i, v in classes.items():
+            outer_span, inner_span = v
+            heading = self.doc.children[i]
+            raw_leaf = heading.children[0]
+            class_ = raw_leaf.content[inner_span[0]: inner_span[1]]
+            to_replace = raw_leaf.content[outer_span[0]: outer_span[1]]
+            new_text = raw_leaf.content.replace(to_replace, "").rstrip()
+            heading.children[0].content = new_text
+            print(f"NEW_TEXT {new_text}")
+            print(self.doc.children[i].children)
+            self.doc.children[i].children[0] = Span(heading.children[0]) # not necessary
+            self.doc.children[i].children.insert(0, Class(class_))
+
         return self
 
     def add_contact(self, contact: Contact, top: bool = True):

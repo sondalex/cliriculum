@@ -17,7 +17,7 @@ If you wish more customization you can use `css`.
 A bit of text
 
 
-# More sections
+# More sections {classes="fa-solid fa-graduation-cap"}
 
 * With lots of bullet point
 * ...

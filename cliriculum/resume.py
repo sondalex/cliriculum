@@ -75,7 +75,7 @@ class MainHTML:
             location_d = load_json(location)
             location_o = Locations(location_d)
             self.parsed.add_location(location_o)
-
+        self.parsed.add_class()
         with MainRenderer() as r:
             self.html = r.render(self.parsed.doc)
 
