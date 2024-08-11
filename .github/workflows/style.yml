@@ -1,4 +1,4 @@
-name: Run Unit Tests
+name: Check Style 
 on: 
   push:
     branches:
@@ -7,8 +7,7 @@ on:
     branches:
       - master
 jobs:
-  needs: run_style_check
-  run_tests:
+  run_style_check:
     runs-on: ubuntu-latest
     strategy:
       matrix:
@@ -21,9 +20,9 @@ jobs:
           python-version: ${{ matrix.python-version }}
       - name: Install deps
         run: |
-          python -m pip install --upgrade pip
-          pip install .
-          pip install .[test]
-      - name: Run pytest
-        run: |
-          pytest
+          pip install ruff
+      - name: Check style
+        run: | 
+          ruff check
+          ruff format --format
+
