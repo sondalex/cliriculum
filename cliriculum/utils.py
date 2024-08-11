@@ -28,7 +28,6 @@ def get_resources_nodes(
         `root=resources.files(package_name).parent`
         package_name, being the package installed on your system
     tree : Traversable
-        _description_
     resrcs:
         Resources should be empty list for first call.
         Expands on each recursive call.
@@ -41,8 +40,8 @@ def get_resources_nodes(
     List[PosixPath]
         List of nodes which are resources
 
-    Examples
-    --------
+    Example
+    -------
     >>> a = resources.files("cliriculum.data")
     >>> get_resources_nodes(a.parent.parent, a)
 
@@ -105,9 +104,7 @@ def copy_files(srcs: Iterable[Union[str, Path]], dst: Union[Path, str]) -> None:
     Parameters
     ----------
     srcs : Iterable[Union[str, Path]]
-        _description_
     dst : Union[Path, str]
-        _description_
     """
     # effectivement peut etre très dangereux.
     # Doit etre corriger.

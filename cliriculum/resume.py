@@ -1,13 +1,12 @@
-from cliriculum.markdown import ParseMd
-from cliriculum.renderers import SideBarRenderer, MainRenderer
-from cliriculum.deserializers import Contact, Dates, Locations
-from cliriculum.markdown import DescriptionBlock
-from cliriculum.loaders import load_json
-from warnings import warn
-from typing import Union
-from cliriculum.utils import copy_files
 from os.path import basename
+from typing import Optional
+from warnings import warn
 
+from cliriculum.deserializers import Contact, Dates, Locations
+from cliriculum.loaders import load_json
+from cliriculum.markdown import DescriptionBlock, ParseMd
+from cliriculum.renderers import MainRenderer, SideBarRenderer
+from cliriculum.utils import copy_files
 
 HEAD = """
 <!doctype html>
@@ -25,24 +24,23 @@ HEAD = """
 
 
 class SideBarHTML:
-    def __init__(self, path, contact, rsrc_dst: Union[str, None] = None):
-        """_summary_
+    def __init__(self, path, contact, rsrc_dst: Optional[str] = None):
+        """
 
         Parameters
         ----------
-        path : _type_
-            _description_
-        contact : _type_
-            _description_
-        rsrc_dst : Union[str, None], optional
-            If not None resources mentionned in JSON files are copied to destination directory `rsrc_dst`. By default, None.
+        path: Path to sidebar markdown file.
+        contact: Path to the contact json file
+        rsrc_dst : Optional[str]
+            If not None resources mentionned in JSON files are copied
+            to destination directory `rsrc_dst`. By default, None.
         """
         parsed = ParseMd(path)
         contact_d = load_json(contact)
         contact_o = Contact(**contact_d)
         parsed.add_contact(contact_o)
         doc = parsed.doc
-        # find ...
+
         if parsed.top is True:
             contact = doc.children[0]
             description = doc.children[1:]
@@ -63,7 +61,7 @@ class SideBarHTML:
 
 class MainHTML:
     def __init__(
-        self, path, dates: Union[str, None] = None, location: Union[str, None] = None
+        self, path, dates: Optional[str] = None, location: Optional[str] = None
     ):
         self.parsed = ParseMd(path)
         if dates is not None:
@@ -94,8 +92,8 @@ class ResumeHTML:
         self,
         sidebar: SideBarHTML,
         main: MainHTML,
-        stylesheet: Union[str, None],
-        rsrc_dst=Union[str, None],
+        stylesheet: Optional[str],
+        rsrc_dst=Optional[str],
     ):
         """
 
@@ -104,12 +102,8 @@ class ResumeHTML:
         sidebar : SideBarHTML
         main : MainHTML
         stylesheet: Path to stylesheet.
-        rsrc_dst: See :class:SidebarHTML
+        rsrc_dst: See :py:class:`SideBarHTML`
 
-        Returns
-        -------
-        _type_
-            _description_
         """
         self.main = main
         self.sidebar = sidebar
@@ -135,9 +129,9 @@ def resume(
     main_md: str,
     dates: str,
     contact: str,
-    rsrc_dst: Union[str, None] = None,
-    stylesheet: Union[str, None] = None,
-    location: Union[str, None] = None,
+    rsrc_dst: Optional[str] = None,
+    stylesheet: Optional[str] = None,
+    location: Optional[str] = None,
 ) -> str:
     """
 
@@ -151,10 +145,11 @@ def resume(
         path to dates JSON
     contact : str
         Path to contact JSON
-    rsrc_dst: Union[str, None]
-        Argument passed to :class:SidebarHTML and :class:ResumeHTML
-    stylesheet: Argument passed to :class:ResumeHTML
-    location: Union[str, None]
+    rsrc_dst: Optional[str]
+        Argument passed to :py:class:`SideBarHTML` and :py:class:`ResumeHTML`
+    stylesheet:
+        Argument passed to :py:class:`ResumeHTML`
+    location: Optional[str]
         Path to JSON file containing location metadata
 
     Returns
@@ -162,8 +157,9 @@ def resume(
     str
         HTML representation of the resume
 
-    Examples
-    --------
+    Example
+    -------
+
     >>> from cliriculum import resume
     >>> html = resume(sidebar_md="sidebar.md", main_md="main.md", contact="contact.json", dates="dates.json")
     """
@@ -181,7 +177,6 @@ def resume(
 
 class Resume:
     """
-
     Attributes
     ----------
     stylesheet: str
@@ -191,15 +186,21 @@ class Resume:
 
     Example
     -------
+
     >>> from cliriculum.resume import Resume
     >>> resume = Resume()  # a callable
-    >>> resume(sidebar_md="sidebar.md", main_md="main.md", contact="contact.json", dates="dates.json")
+    >>> resume(
+            sidebar_md="sidebar.md",
+            main_md="main.md",
+            contact="contact.json",
+            dates="dates.json"
+        )
     """
 
     def __init__(
         self,
-        rsrc_dst: Union[str, None] = None,
-        stylesheet: Union[str, None] = None,
+        rsrc_dst: Optional[str] = None,
+        stylesheet: Optional[str] = None,
     ):
         self.rsrc_dst = rsrc_dst
         self.stylesheet = stylesheet
@@ -210,8 +211,8 @@ class Resume:
         sidebar_md: str,
         main_md: str,
         contact: str,
-        dates: Union[str, None] = None,
-        location: Union[str, None] = None,
+        dates: Optional[str] = None,
+        location: Optional[str] = None,
     ) -> str:
         sidebar = SideBarHTML(path=sidebar_md, contact=contact, rsrc_dst=self.rsrc_dst)
         main = MainHTML(path=main_md, dates=dates, location=location)
@@ -221,6 +222,6 @@ class Resume:
             stylesheet=self.stylesheet,
             rsrc_dst=self.rsrc_dst,
         )
-        self.resume = resume  # wich means a text is generated
+        self.resume = resume
         html = resume.join()
         return html

@@ -13,3 +13,4 @@ image.jpeg
 !example/output.png
 dist/
 venv/
+.null-ls*

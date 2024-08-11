@@ -1,8 +1,8 @@
-from cliriculum.deserializers import Contact, Profile, Socials, URL
-from cliriculum.deserializers import Dates, Period
 from datetime import date, timedelta
+
 import pytest
 
+from cliriculum.deserializers import Contact, Dates, Period
 
 WEBSITE_1 = {
     "url": "https://github.com/sondalex/cliriculum",
@@ -83,7 +83,7 @@ class TestContact:
             Contact(**{})
 
 
-class TestDates:
+class TestPeriod:
     @pytest.mark.parametrize("tuple", PERIOD_KWARGS)
     def test___init__(self, tuple):
         with pytest.raises(TypeError):

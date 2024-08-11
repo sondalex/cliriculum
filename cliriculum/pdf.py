@@ -2,21 +2,22 @@
 Utilities to render the generated resume from html to pdf.
 """
 
-from shutil import which
+import os
 import subprocess
 from http.server import HTTPServer, SimpleHTTPRequestHandler
-from typing import Union
+from shutil import which
 from threading import Thread
-import os
+from typing import Union
 
-
-ARGS = ["--headless"]
 EXTRA_ARGS = [
     "--run-all-compositor-stages-before-draw",
     "--disable-gpu",
     "--no-first-run",
     "--no-default-browser-check",
     "--hide-scrollbars",
+    "--no-sandbox",
+    "--disable-setuid-sandbox",
+    "--disable-software-rasterizer",
 ]
 
 
@@ -88,8 +89,10 @@ class ChDir:
 def chromium_print(
     directory: Union[str, os.PathLike],
     filename: str = "output.pdf",
-    port=8000,
-    virtual_time_budget=20000,
+    port: int = 8000,
+    timeout: int = 3000,
+    verbose: bool = False,
+    headless: bool = True,
 ):
     """
 
@@ -104,8 +107,12 @@ def chromium_print(
     port : int, optional
         The network port , by default 8000
         If you wish automatic port selection set this value to 0.
-    virtual_time_budget : int, optional
-        Used to set chromium headless --virtual-time-budget flag, by default 20000
+    timeout: int
+        Time to wait.
+        See `chromium new-headless <https://developer.chrome.com/docs/chromium/new-headless#--timeout>`_
+        by default 3000 (3 seconds)
+    headless: bool
+        Defaults to True
 
     Raises
     ------
@@ -120,15 +127,16 @@ def chromium_print(
         httpd = HTTPServer(("127.0.0.1", port), SimpleHTTPRequestHandler)
         thread_server = Thread(target=httpd.serve_forever)
         thread_server.start()
-        PRINT = [f"--print-to-pdf={filename}"]
-        BUDGET = [f"--virtual-time-budget={virtual_time_budget}"]
+        named_args = [f"--timeout={timeout}", f"--print-to-pdf={filename}"]
+        arg = []
+        if headless is True:
+            arg = ["--headless='new'"]
+        cmd = [ch_deps] + arg + named_args + EXTRA_ARGS + [f"http://127.0.0.1:{port}"]
+        if verbose is True:
+            print(" ".join(cmd))
         process = subprocess.run(
-            [ch_deps]
-            + ARGS
-            + PRINT
-            + BUDGET
-            + EXTRA_ARGS
-            + [f"http://127.0.0.1:{port}"]
+            cmd,
+            timeout=30,
         )
         if process.returncode != 0:
             raise subprocess.SubprocessError(f"return code: {process.returncode}")

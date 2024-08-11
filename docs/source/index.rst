@@ -16,7 +16,7 @@ cliriculum's documentation
 
    user_guide/index
 
-   api
+   api/index
    
    development/index
 
