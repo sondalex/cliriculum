@@ -9,6 +9,8 @@ from cliriculum.markdown import (
     ImageEntry,
     LocationEntry,
     PeriodEntry,
+    Class,
+    Span
 )
 from textwrap import dedent
 
@@ -24,6 +26,8 @@ class Renderer(HTMLRenderer):
             ImageEntry,
             LocationEntry,
             PeriodEntry,
+            Class,
+            Span
         )
 
     @staticmethod
@@ -108,6 +112,13 @@ class Renderer(HTMLRenderer):
                 text=token.text
             )
         return pre + dedent(html) + post
+
+    def render_class(self, token):
+        print(f"CLASSES: {token.classes}")
+        return f'<i class="{token.classes}"> </i>'
+
+    def render_span(self, token):
+        return f"<span>{self.render_raw_text(token.text)}</span>"
 
     def render_url_entry(self, token):
         parent_o = '<div class="box">'
