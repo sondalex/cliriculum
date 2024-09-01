@@ -416,7 +416,7 @@ class ParseMd:
         profession = TextEntry(contact.profession, emphasis="italic")
         email_url = contact.email.url
         if email_url is not None:
-            email_url = "mailto: {}".format(contact.email.url)
+            email_url = f"mailto:{contact.email.url}"
 
         email = URLEntry(
             src=contact.email.logo,
